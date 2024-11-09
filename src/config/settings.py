@@ -40,7 +40,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_extensions'
+    "user.apps.UserConfig",
+    "order.apps.OrderConfig",
+    "product.apps.ProductConfig",
+    "category.apps.CategoryConfig",
+    "cart.apps.CartConfig",
+    'django_extensions',
+    "drf_yasg"
 ]
 
 MIDDLEWARE = [
@@ -152,19 +158,13 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 FIXTURE_DIRS = '/fixtures/'
 
+AUTH_USER_MODEL = "user.CustomUser"
+
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-
-# Users registration
-
-LOGIN_URL = 'login'
-LOGOUT_URL = 'logout'
-LOGOUT_REDIRECT_URL = 'login'
-LOGIN_REDIRECT_URL = 'home'
-
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
