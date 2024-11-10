@@ -92,7 +92,10 @@ DATABASES = {
         'USER': os.getenv('SQL_USER'),
         'PASSWORD': os.getenv('SQL_PASSWORD'),
         'HOST': os.getenv('SQL_HOST'),
-        'PORT': os.getenv('SQL_PORT')
+        'PORT': os.getenv('SQL_PORT'),
+        "TEST": {
+            "NAME": "test_db"
+        }
     }
 }
 
@@ -121,7 +124,7 @@ LOGGING = {
     'disable_existing_loggers': False,
     'formatters': {
         'custom_formatter': {
-            'format': "{levelname} {asctime} {module} {process:d} {thread:d} {message}",
+            'format': "\033[1;32m{levelname} \033[1;33m{asctime} \033[1;34m{module} \033[1;37m{message}\033[0m",
             "style": '{'
         },
     },
@@ -133,8 +136,18 @@ LOGGING = {
             'formatter': 'custom_formatter',
             'encoding': 'utf-8'
         },
+        "console": {
+            'class': 'logging.StreamHandler',
+            'formatter': 'custom_formatter',
+        }
     },
-    'loggers': {},
+    'loggers': {
+        "cons": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False
+        }
+    },
 }
 
 # Internationalization
