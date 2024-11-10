@@ -13,6 +13,8 @@ class CustomUser(AbstractUser):
         related_query_name="user"
     )
 
+    objects = models.Manager()
+
 class Profile(models.Model):
     user = models.OneToOneField(to=CustomUser, on_delete=models.CASCADE, primary_key=True)
     address = models.CharField(max_length=255)
