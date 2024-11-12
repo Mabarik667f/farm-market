@@ -25,6 +25,8 @@ class Order(models.Model):
         related_query_name="order"
     )
 
+    objects = models.Manager()
+
     class Meta:
         constraints = [
             models.CheckConstraint(
@@ -39,7 +41,10 @@ class OrderItem(models.Model):
     order = models.ForeignKey(to=Order, on_delete=models.CASCADE)
     cart_item = models.ForeignKey(to="cart.CartItem", on_delete=models.CASCADE)
 
+    objects = models.Manager()
 
 class History(models.Model):
     order = models.ForeignKey(to=Order, on_delete=models.CASCADE)
     profile = models.ForeignKey(to="user.Profile", on_delete=models.CASCADE)
+
+    objects = models.Manager()

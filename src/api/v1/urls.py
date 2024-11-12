@@ -7,11 +7,11 @@ from drf_spectacular.views import (SpectacularAPIView, SpectacularSwaggerView,
 
 
 urlpatterns = [
-    path("user/", include("api.v1.routing.user_urls")),
-    path("product/", include("api.v1.routing.product_urls")),
-    path("category/", include("api.v1.routing.category_urls")),
-    path("cart/", include("api.v1.routing.cart_urls")),
-    path("order/", include("api.v1.routing.order_urls")),
+    path("users/", include("api.v1.routing.user_urls")),
+    path("products/", include("api.v1.routing.product_urls")),
+    path("categories/", include("api.v1.routing.category_urls")),
+    path("carts/", include("api.v1.routing.cart_urls")),
+    path("orders/", include("api.v1.routing.order_urls")),
 
     path(
         "schema/",

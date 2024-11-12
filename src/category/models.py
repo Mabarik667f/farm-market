@@ -10,7 +10,11 @@ class Category(models.Model):
         related_query_name="category"
     )
 
+    objects = models.Manager()
+
 
 class CategoryHasProduct(models.Model):
     category = models.ForeignKey(to=Category, on_delete=models.CASCADE)
     product = models.ForeignKey(to="product.Product", on_delete=models.CASCADE)
+
+    objects = models.Manager()
