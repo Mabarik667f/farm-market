@@ -25,6 +25,15 @@ class Order(models.Model):
         related_query_name="order"
     )
 
+    class Meta:
+        constraints = [
+            models.CheckConstraint(
+                check=models.Q(phone__regex=r'(^8|7\+7)(\d{10})'),
+                name="order_phone_valid_format"
+            )
+        ]
+
+
 
 class OrderItem(models.Model):
     order = models.ForeignKey(to=Order, on_delete=models.CASCADE)

@@ -88,7 +88,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': os.getenv('SQL_ENGINE'),
-        'NAME': os.getenv('SQL_DB'),
+        'NAME': os.getenv('SQL_NAME'),
         'USER': os.getenv('SQL_USER'),
         'PASSWORD': os.getenv('SQL_PASSWORD'),
         'HOST': os.getenv('SQL_HOST'),
@@ -171,7 +171,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-FIXTURE_DIRS = '/fixtures/'
+FIXTURE_DIRS = 'fixtures/'
 
 AUTH_USER_MODEL = "user.CustomUser"
 

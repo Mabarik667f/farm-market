@@ -7,4 +7,6 @@ class CartItem(models.Model):
     product = models.ForeignKey(to="product.Product", on_delete=models.CASCADE)
 
     count = models.PositiveIntegerField(default=1)
-    delivery_date = models.DateTimeField()
+    delivery_date = models.DateTimeField(auto_now=True)
+
+    objects = models.Manager()

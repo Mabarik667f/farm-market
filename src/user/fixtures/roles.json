@@ -1,0 +1,20 @@
+[
+  {
+    "model": "user.Role",
+    "fields": {
+      "name": "S"
+    }
+  },
+  {
+    "model": "user.Role",
+    "fields": {
+      "name": "A"
+    }
+  },
+  {
+    "model": "user.Role",
+    "fields": {
+      "name": "D"
+    }
+  }
+]

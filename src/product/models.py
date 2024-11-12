@@ -14,3 +14,5 @@ class Product(models.Model):
         related_name="products",
         related_query_name="product"
     )
+
+    objects = models.Manager()
