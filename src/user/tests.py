@@ -39,11 +39,11 @@ class UserTestCases(APITestCase):
             "password": "testpass123",
             "password2": "testpass123"
         }
-        response: Response = self.client.post("/api/v1/user/register/", data=data, format='json') #type: ignore
+        response: Response = self.client.post("/api/v1/users/register/", data=data, format='json') #type: ignore
         self.assertEqual(response.status_code, 201)
 
         data["password"] = "rerssdsds"
-        response: Response = self.client.post("/api/v1/user/register/", data=data, format='json') #type: ignore
+        response: Response = self.client.post("/api/v1/users/register/", data=data, format='json') #type: ignore
         self.assertEqual(response.status_code, 400)
 
         self.assertEqual(Profile.objects.get(user_id=1).pk, 1)

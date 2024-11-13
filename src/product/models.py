@@ -6,6 +6,7 @@ class Product(models.Model):
     price = models.PositiveIntegerField()
     count = models.PositiveIntegerField()
     about = models.JSONField()
+    img = models.ImageField(upload_to="product/")
 
     seller = models.ForeignKey(to="user.Profile", on_delete=models.CASCADE)
     cart_items = models.ManyToManyField(

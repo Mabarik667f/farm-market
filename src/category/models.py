@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Category(models.Model):
-    name = models.CharField()
+    name = models.CharField(unique=True)
     products = models.ManyToManyField(
         to="product.Product",
         through="CategoryHasProduct",

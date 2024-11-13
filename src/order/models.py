@@ -25,6 +25,8 @@ class Order(models.Model):
         related_query_name="order"
     )
 
+    created = models.DateTimeField(auto_now=True)
+
     objects = models.Manager()
 
     class Meta:
