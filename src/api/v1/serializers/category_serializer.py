@@ -5,7 +5,7 @@ from category.models import Category, CategoryHasProduct
 from product.models import Product
 
 class CategorySerializer(serializers.ModelSerializer):
-    products = ProductSerializer(many=True)
+    products = ProductSerializer(many=True, required=False)
 
     class Meta:
         model = Category

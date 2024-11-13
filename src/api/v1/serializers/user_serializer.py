@@ -35,7 +35,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 class CustomUserSerializer(serializers.ModelSerializer):
     username = serializers.CharField()
     email = serializers.EmailField()
-    img = serializers.ImageField()
+    img = serializers.ImageField(required=False)
 
     class Meta:
         model = CustomUser
@@ -51,7 +51,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         required=False,
         validators=[
             RegexValidator(
-                regex=r'(^8|7\+7)(\d{10})',
+                regex=r'7(\d{10})',
                 message="Введите номер телефона в Российском формате",
                 code="invalid_registration"
             )
