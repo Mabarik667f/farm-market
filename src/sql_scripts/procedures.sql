@@ -8,7 +8,8 @@ CREATE OR REPLACE PROCEDURE create_user(
     date_joined TIMESTAMP WITH TIME ZONE ,
     first_name CHARACTER VARYING(150),
     last_name CHARACTER VARYING(150),
-    img CHARACTER VARYING(100))
+    img CHARACTER VARYING(100)
+)
 
 LANGUAGE SQL
 AS $$
@@ -36,4 +37,70 @@ CREATE OR REPLACE PROCEDURE add_role_for_user(user_id BIGINT, role_id BIGINT)
 LANGUAGE SQL
 AS $$
 INSERT INTO user_roleforuser (user_id, role_id) VALUES (user_id, role_id)
+$$;
+
+CREATE OR REPLACE PROCEDURE create_category(name CHARACTER VARYING)
+LANGUAGE SQL
+AS $$
+INSERT INTO category_category (name) VALUES (name)
+$$;
+
+CREATE OR REPLACE PROCEDURE create_category_has_product(category_id BIGINT, product_id BIGINT)
+LANGUAGE SQL
+AS $$
+INSERT INTO category_categoryhasproduct (category_id, product_id) VALUES (category_id, product_id)
+$$;
+
+CREATE OR REPLACE PROCEDURE create_product(
+    name CHARACTER VARYING(255),
+    price INTEGER,
+    count INTEGER,
+    about JSONB,
+    img CHARACTER VARYING,
+    seller_id BIGINT
+)
+LANGUAGE SQL
+AS $$
+INSERT INTO product_product (name, price, count, about, img, seller_id)
+VALUES (name, price, count, about, img, seller_id)
+$$;
+
+CREATE OR REPLACE PROCEDURE create_cart_item(
+    product_id BIGINT,
+    user_id BIGINT,
+    count INTEGER,
+    delivery_date TIMESTAMP WITH TIME ZONE
+)
+LANGUAGE SQL
+AS $$
+INSERT INTO cart_cartitem (product_id, user_id, count, delivery_date)
+VALUES (product_id, user_id, count, delivery_date)
+$$;
+
+CREATE OR REPLACE PROCEDURE create_order(
+    user_id BIGINT
+    address CHARACTER VARYING(255),
+    phone CHARACTER VARYING,
+)
+LANGUAGE SQL
+AS $$
+INSERT INTO order_order (address, phone, user_id) VALUES (address, phone, user_id)
+$$;
+
+CREATE OR REPLACE PROCEDURE create_order_item(
+    order_id BIGINT,
+    product_id BIGINT,
+    count INTEGER,
+    delivery_date TIMESTAMP WITH TIME ZONE
+)
+LANGUAGE SQL
+AS $$
+INSERT INTO order_orderitem (order_id, product_id, count, delivery_date)
+VALUES (order_id, product_id, count, delivery_date)
+$$;
+
+CREATE OR REPLACE PROCEDURE create_history(profile_id BIGINT, order_id BIGINT)
+LANGUAGE SQL
+AS $$
+INSERT INTO order_history (profile_id, order_id) VALUES (profile_id, order_id)
 $$;

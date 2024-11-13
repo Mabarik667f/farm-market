@@ -18,7 +18,7 @@ class Profile(models.Model):
     address = models.CharField(max_length=255, null=True)
     phone = models.CharField(
         RegexValidator(
-            regex=r'(^8|7\+7)(\d{10})',
+            regex=r'7(\d{10})',
             message="Введите номер телефона в Российском формате",
             code="invalid_registration"
         ),
@@ -28,7 +28,7 @@ class Profile(models.Model):
     class Meta:
         constraints = [
             models.CheckConstraint(
-                check=models.Q(phone__regex=r'(^8|7\+7)(\d{10})'),
+                check=models.Q(phone__regex=r'7(\d{10})'),
                 name="profile_phone_valid_format"
             )
         ]

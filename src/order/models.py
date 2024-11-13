@@ -7,7 +7,7 @@ class Order(models.Model):
     address = models.CharField(max_length=255)
     phone = models.CharField(
         RegexValidator(
-            regex=r'(^8|7\+7)(\d{10})',
+            regex=r'7(\d{10})',
             message="Введите номер телефона в Российском формате",
             code="invalid_create_order"
         )
@@ -18,8 +18,8 @@ class Order(models.Model):
         related_name="orders",
         related_query_name="order"
     )
-    cart_items = models.ManyToManyField(
-        to="cart.CartItem",
+    products = models.ManyToManyField(
+        to="product.Product",
         through="OrderItem",
         related_name="orders",
         related_query_name="order"
@@ -32,18 +32,20 @@ class Order(models.Model):
     class Meta:
         constraints = [
             models.CheckConstraint(
-                check=models.Q(phone__regex=r'(^8|7\+7)(\d{10})'),
+                check=models.Q(phone__regex=r'7(\d{10})'),
                 name="order_phone_valid_format"
             )
         ]
 
 
-
 class OrderItem(models.Model):
     order = models.ForeignKey(to=Order, on_delete=models.CASCADE)
-    cart_item = models.ForeignKey(to="cart.CartItem", on_delete=models.CASCADE)
+    product = models.ForeignKey(to="product.Product", on_delete=models.CASCADE)
+    count = models.PositiveIntegerField(default=1)
+    delivery_date = models.DateTimeField(auto_now=True)
 
     objects = models.Manager()
+
 
 class History(models.Model):
     order = models.ForeignKey(to=Order, on_delete=models.CASCADE)

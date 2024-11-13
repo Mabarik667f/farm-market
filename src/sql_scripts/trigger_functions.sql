@@ -15,3 +15,14 @@ BEGIN
     RETURN NEW;
 END
 $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION call_create_history()
+RETURNS TRIGGER AS $$
+DECLARE profile_id BIGINT;
+BEGIN
+    WITH cte1 AS (SELECT o.user_id FROM order_order o ORDER BY created LIMIT 1);
+    SELECT p.profile_id INTO profile_id FROM user_profile WHERE p.user_id = cte1.id;
+    CALL create_history(profile_id, NEW.id);
+    RETURN NEW;
+END
+$$ LANGUAGE plpgsql;
