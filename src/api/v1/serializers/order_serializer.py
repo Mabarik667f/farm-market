@@ -24,6 +24,11 @@ class OrderItemSerializer(serializers.ModelSerializer):
         fields = ("order", "cart_item")
 
 
+class OrderWithItemsSerializer(serializers.BaseSerializer):
+    order = OrderSerializer()
+    order_items = OrderItemSerializer(many=True, read_only=True)
+
+
 class HistorySerializer(serializers.ModelSerializer):
     order = OrderSerializer()
     profile = ProfileSerializer()

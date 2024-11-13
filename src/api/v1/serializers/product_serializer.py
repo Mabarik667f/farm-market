@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
-from api.v1.serializers.user_serializer import CustomUserSerializer
 from product.models import Product
+from user.models import CustomUser
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -9,7 +9,9 @@ class ProductSerializer(serializers.ModelSerializer):
     price = serializers.IntegerField(min_value=1)
     count = serializers.IntegerField(min_value=1)
     about = serializers.JSONField()
-    seller = CustomUserSerializer()
+
+    # change query set to seller
+    seller = serializers.PrimaryKeyRelatedField(queryset=CustomUser.objects.all())
 
     class Meta:
         model = Product

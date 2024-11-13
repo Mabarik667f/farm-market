@@ -9,6 +9,7 @@ class CartItemSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(queryset=CustomUser.objects.all())
     product = serializers.PrimaryKeyRelatedField(queryset=Product.objects.all())
     count = serializers.IntegerField(min_value=1)
+    delivery_date = serializers.DateTimeField()
 
     class Meta:
         model = CartItem
