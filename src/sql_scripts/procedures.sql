@@ -39,10 +39,10 @@ AS $$
 INSERT INTO user_roleforuser (user_id, role_id) VALUES (user_id, role_id)
 $$;
 
-CREATE OR REPLACE PROCEDURE create_category(name CHARACTER VARYING)
+CREATE OR REPLACE PROCEDURE create_category(cat_name CHARACTER VARYING)
 LANGUAGE SQL
 AS $$
-INSERT INTO category_category (name) VALUES (name)
+INSERT INTO category_category (name) VALUES (cat_name)
 $$;
 
 CREATE OR REPLACE PROCEDURE create_category_has_product(category_id BIGINT, product_id BIGINT)
@@ -78,9 +78,9 @@ VALUES (product_id, user_id, count, delivery_date)
 $$;
 
 CREATE OR REPLACE PROCEDURE create_order(
-    user_id BIGINT
+    user_id BIGINT,
     address CHARACTER VARYING(255),
-    phone CHARACTER VARYING,
+    phone CHARACTER VARYING
 )
 LANGUAGE SQL
 AS $$
