@@ -1,4 +1,3 @@
-import json
 import logging
 from ninja.testing import TestClient
 from category.api import router

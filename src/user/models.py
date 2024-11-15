@@ -16,12 +16,12 @@ class CustomUser(AbstractUser):
 class Profile(models.Model):
     user = models.OneToOneField(to=CustomUser, on_delete=models.CASCADE, primary_key=True)
     address = models.CharField(max_length=255, null=True)
-    phone = models.CharField(
+    phone = models.CharField(validators=[
         RegexValidator(
             regex=r'7(\d{10})',
             message="Введите номер телефона в Российском формате",
             code="invalid_registration"
-        ),
+        )],
         null=True
     )
 
