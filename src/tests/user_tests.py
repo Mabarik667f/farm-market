@@ -1,7 +1,6 @@
 import logging
-from ninja.testing import TestClient
-from pluggy import Result
-from user.api import router
+from ninja_extra.testing import TestClient
+from user.api import UserAPI
 import pytest
 
 from user.models import CustomUser, Profile, RoleForUser
@@ -16,7 +15,7 @@ user_data = {
 
 @pytest.fixture
 def u_client():
-    return TestClient(router)
+    return TestClient(UserAPI)
 
 @pytest.fixture
 def new_user() -> CustomUser:

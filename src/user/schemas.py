@@ -83,12 +83,12 @@ class User(Schema):
 
 class UserOut(User):
     id: int
+    img: str | None = None
     roles: list[Role]
 
 
 class UserOutWithEmail(UserOut):
     email: EmailStr
-    roles: list[Role]
 
 
 class Profile(Schema):

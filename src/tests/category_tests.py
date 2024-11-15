@@ -1,6 +1,6 @@
 import logging
-from ninja.testing import TestClient
-from category.api import router
+from ninja_extra.testing import TestClient
+from category.api import CategoryAPI
 import pytest
 
 from category.models import Category
@@ -8,7 +8,7 @@ logger = logging.getLogger("cons")
 
 @pytest.fixture
 def n_client():
-    return TestClient(router)
+    return TestClient(CategoryAPI)
 
 @pytest.fixture
 def new_category() -> Category:
