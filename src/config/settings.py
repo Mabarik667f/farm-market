@@ -47,7 +47,8 @@ INSTALLED_APPS = [
     "category.apps.CategoryConfig",
     "cart.apps.CartConfig",
     'django_extensions',
-    "ninja_extra"
+    "ninja_extra",
+    "ninja_jwt"
 ]
 
 MIDDLEWARE = [

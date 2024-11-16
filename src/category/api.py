@@ -1,11 +1,11 @@
 from django.db import connection
 from django.shortcuts import get_object_or_404
-from ninja_extra import ControllerBase, api_controller, route
+from ninja_extra import ControllerBase, api_controller, permissions, route
 
 from category.schemas import CategoryOut, CreateCategory
 from category.models import Category as CategoryModel
 
-@api_controller("/categories")
+@api_controller("/categories", tags=["categories"], permissions=[])
 class CategoryAPI(ControllerBase):
     @route.post('/', response={201: CategoryOut})
     def create_category(self, payload: CreateCategory):

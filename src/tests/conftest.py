@@ -1,8 +1,16 @@
 import logging
+import shutil
+from pathlib import Path
+from ninja_extra.testing import TestClient
+from ninja_jwt.controller import NinjaJWTDefaultController
 import pytest
 import os
 from django.db import connection
-from user.models import CustomUser
+from user.models import CustomUser, Role, RoleForUser
+
+from PIL import Image
+from io import BytesIO
+
 logger = logging.getLogger("cons")
 
 @pytest.fixture(autouse=True)
@@ -24,9 +32,34 @@ def execute_sql_files():
 
 
 @pytest.fixture(scope="function")
-def create_user():
+def create_seller():
     user = CustomUser.objects.create_user(
         username="testuser",
         email="testuser@example.com",
+        password="1234"
     )
-    user.set_password("Testpass123")
+    role = Role.objects.get(name="S")
+    RoleForUser.objects.create(user_id=user.pk, role_id=role.pk)
+    return user
+
+
+@pytest.fixture(scope="function")
+def new_user() -> CustomUser:
+    user_data = CustomUser.objects.create_user(
+        username="testuser",
+        email="testuser@example.com",
+        password="1234"
+    )
+    return user_data
+
+
+
+@pytest.fixture(autouse=True)
+def monkeypatch_dir(monkeypatch: pytest.MonkeyPatch):
+    test_dir = Path("test_dir/")
+    test_dir.mkdir(exist_ok=True)
+    monkeypatch.chdir("test_dir/")
+    os.mkdir("media")
+    yield
+    monkeypatch.chdir("..")
+    shutil.rmtree("test_dir/")

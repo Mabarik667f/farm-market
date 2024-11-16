@@ -1,5 +1,4 @@
 import logging
-from django.contrib.auth import get_user_model
 from django.db import connection
 from django.utils import timezone
 from django.contrib.auth.hashers import make_password
@@ -8,14 +7,13 @@ from django.shortcuts import get_object_or_404
 from user.schemas import AddRole, Register, UserOut, UserOutWithEmail
 from user.models import CustomUser, RoleForUser, Role as RoleModel
 
-from ninja_extra import ControllerBase, api_controller, route
+from ninja_extra import ControllerBase, api_controller, route, permissions
 
 logger = logging.getLogger('cons')
 
 @api_controller('/users', tags=['users'], permissions=[])
 class UserAPI(ControllerBase):
-
-    @route.post('/register', response={201: UserOutWithEmail})
+    @route.post('/register', response={201: UserOutWithEmail}, permissions=[])
     def register(self, payload: Register):
         user_data = {
             "username": payload.username,
@@ -37,7 +35,7 @@ class UserAPI(ControllerBase):
         user = CustomUser.objects.get(username=payload.username)
         return user
 
-    @route.get('/{user_id}', response={200: UserOut})
+    @route.get('/{user_id}', response={200: UserOut}, permissions=[])
     def get_user(self, user_id: int):
         user = get_object_or_404(CustomUser, id=user_id)
         return user

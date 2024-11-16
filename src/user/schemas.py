@@ -92,13 +92,16 @@ class UserOutWithEmail(UserOut):
 
 
 class Profile(Schema):
-    address: str
-    phone: str
+    address: str | None = None
+    phone: str | None = None
 
     @field_validator("phone")
     def regexp_phone_check(cls, v):
+        if not v:
+            return v
+
         pattern = re.compile(r"7(\d{10})")
-        if not pattern.fullmatch(v):
+        if pattern.fullmatch(v):
             raise PhoneFormatException("Неверный формат номера!")
         return v
 

@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 
 
 class Product(models.Model):
@@ -17,3 +18,6 @@ class Product(models.Model):
     )
 
     objects = models.Manager()
+
+    def get_upload_path(self):
+        return f"product{self.pk}/"
