@@ -102,17 +102,20 @@ class TestCasesforProducts:
         new_product: tuple[Product, CustomUser]
     ):
         self.set_headers(new_product[1])
-        new_data = {
+        self.headers["Content-Type"] = "multipart/form-data"
+        new_data = {"payload": json.dumps({
             "count": 100,
             "about": {
                 "mass": 200,
                 "t": "ls"
             }
-        }
+        })}
+
         response = p_client.patch(f"/{new_product[0].pk}", headers=self.headers,
-            json=new_data, user=new_product[1])
+            data=new_data, FILES={"file": self.img}, user=new_product[1])
 
         j = response.json()
         assert response.status_code == 200
         assert j["count"] == 100
         assert j["about"]['mass'] == 200 and j["about"]["t"] == "ls"
+        assert j["img"] == f"/media/product{new_product[0].pk}/dummy.png"
