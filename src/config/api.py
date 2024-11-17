@@ -8,7 +8,7 @@ from django.http import HttpRequest
 from category.api import CategoryAPI
 from user.api import UserAPI
 from product.api import ProductAPI
-from cart.api import router as cart_router
+from cart.api import CartAPI
 from order.api import router as order_router
 from user.models import CustomUser
 
@@ -31,5 +31,5 @@ api.register_controllers(NinjaJWTDefaultController)
 api.register_controllers(UserAPI)
 api.register_controllers(CategoryAPI)
 api.register_controllers(ProductAPI)
-api.add_router("/cart/", cart_router)
+api.register_controllers(CartAPI)
 api.add_router("/orders/", order_router)

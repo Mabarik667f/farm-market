@@ -7,7 +7,7 @@ from product.api import ProductAPI
 from product.models import Product
 from user.models import CustomUser
 from category.models import Category
-from tests.helpers import create_img, get_auth_header
+from tests.helpers import create_img, BaseTestClass, ProductData
 
 logger = logging.getLogger("cons")
 
@@ -17,12 +17,9 @@ def p_client():
     return TestClient(ProductAPI)
 
 
-class TestCasesforProducts:
+class TestCasesforProducts(BaseTestClass):
 
     img = UploadedFile(file=create_img())
-
-    def set_headers(self, user: CustomUser) -> None:
-        self.headers = dict() | get_auth_header(user)
 
     def get_product_data(self, categories: list[Category]):
         product_data = {
@@ -55,7 +52,7 @@ class TestCasesforProducts:
 
         j = response.json()
         assert response.status_code == 201
-        assert j["img"] == "/media/product1/dummy.png"
+        assert j["img"] == f"/media/product{j["id"]}/dummy.png"
         assert len(j["about"]) == 1
         assert len(j["categories"]) == 2
 
@@ -73,12 +70,12 @@ class TestCasesforProducts:
 
         assert response.status_code == 403
 
-    def tests_get_product(self, p_client: TestClient, new_product: tuple[Product, CustomUser]):
-        response = p_client.get(f'/{new_product[0].pk}')
+    def tests_get_product(self, p_client: TestClient, new_product: ProductData):
+        response = p_client.get(f'/{new_product.product.pk}')
         assert response.status_code == 200
         assert response.json()["name"]
 
-    def tests_get_list_products(self, p_client: TestClient, new_product: tuple[Product, CustomUser]):
+    def tests_get_list_products(self, p_client: TestClient, new_product: ProductData):
         response = p_client.get(f'/')
         assert response.status_code == 200
         assert len(response.json()) == 1
@@ -86,22 +83,22 @@ class TestCasesforProducts:
     def tests_del_product(
         self,
         p_client: TestClient,
-        new_product: tuple[Product, CustomUser],
+        new_product: ProductData,
         new_user: CustomUser
     ):
-        self.set_headers(new_product[1])
-        response = p_client.delete(f'/{new_product[0].pk}', headers=self.headers, user=new_user)
+        self.set_headers(new_product.user)
+        response = p_client.delete(f'/{new_product.product.pk}', headers=self.headers, user=new_user)
         assert response.status_code == 403
 
-        response = p_client.delete(f'/{new_product[0].pk}', headers=self.headers, user=new_product[1])
+        response = p_client.delete(f'/{new_product.product.pk}', headers=self.headers, user=new_product.user)
         assert response.status_code == 204
 
     def tests_patch_product(
         self,
         p_client: TestClient,
-        new_product: tuple[Product, CustomUser]
+        new_product: ProductData
     ):
-        self.set_headers(new_product[1])
+        self.set_headers(new_product.user)
         self.headers["Content-Type"] = "multipart/form-data"
         new_data = {"payload": json.dumps({
             "count": 100,
@@ -111,11 +108,11 @@ class TestCasesforProducts:
             }
         })}
 
-        response = p_client.patch(f"/{new_product[0].pk}", headers=self.headers,
-            data=new_data, FILES={"file": self.img}, user=new_product[1])
+        response = p_client.patch(f"/{new_product.product.pk}", headers=self.headers,
+            data=new_data, FILES={"file": self.img}, user=new_product.user)
 
         j = response.json()
         assert response.status_code == 200
         assert j["count"] == 100
         assert j["about"]['mass'] == 200 and j["about"]["t"] == "ls"
-        assert j["img"] == f"/media/product{new_product[0].pk}/dummy.png"
+        assert j["img"] == f"/media/product{new_product.product.pk}/dummy.png"

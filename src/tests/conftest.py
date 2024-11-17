@@ -1,20 +1,19 @@
 import json
 import logging
 import shutil
-from pathlib import Path
-from ninja_extra.testing import TestClient
-from ninja_jwt.controller import NinjaJWTDefaultController
 import pytest
 import os
-from django.db import connection
-from category.models import Category, CategoryHasProduct
-from product.models import Product
-from user.models import CustomUser, Role, RoleForUser
 
-from PIL import Image
-from io import BytesIO
+from pathlib import Path
+from django.db import connection
+from cart.models import CartItem
+from category.models import Category
+from user.models import CustomUser, Role, RoleForUser
+from tests.helpers import ProductData, CartData
+from tests.helpers.api import create_product, create_cart_item
 
 logger = logging.getLogger("cons")
+
 
 @pytest.fixture(autouse=True)
 def enable_db_access_for_all_tests(db):
@@ -69,18 +68,22 @@ def list_categories() -> list[Category]:
 
 
 @pytest.fixture(scope="function")
-def new_product(create_seller: CustomUser, list_categories: list[Category]) -> tuple[Product, CustomUser]:
-    pr = Product.objects.create(
-        name="string",
-        price=1,
-        count=1,
-        about={"mass": 100},
-        img="/",
-        seller_id=create_seller.pk
-    )
-    for cat in list_categories:
-        CategoryHasProduct.objects.create(product_id=pr.pk, category_id=cat.pk)
-    return (pr, create_seller)
+def new_product(create_seller: CustomUser, list_categories: list[Category]) -> ProductData:
+    pr = create_product(create_seller.pk, categories=list_categories)
+    return ProductData(pr, create_seller)
+
+
+@pytest.fixture(scope="function")
+def new_cart(
+    new_user: CustomUser,
+    create_seller: CustomUser,
+    list_categories: list[Category]
+) -> CartData:
+    cart = []
+    for _ in range(2):
+        pr = create_product(create_seller.pk, categories=list_categories)
+        cart.append(create_cart_item(pr.pk, new_user.pk))
+    return CartData(new_user, cart)
 
 
 @pytest.fixture(autouse=True)
