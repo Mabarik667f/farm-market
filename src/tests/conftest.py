@@ -1,3 +1,4 @@
+import json
 import logging
 import shutil
 from pathlib import Path
@@ -6,6 +7,8 @@ from ninja_jwt.controller import NinjaJWTDefaultController
 import pytest
 import os
 from django.db import connection
+from category.models import Category, CategoryHasProduct
+from product.models import Product
 from user.models import CustomUser, Role, RoleForUser
 
 from PIL import Image
@@ -34,7 +37,7 @@ def execute_sql_files():
 @pytest.fixture(scope="function")
 def create_seller():
     user = CustomUser.objects.create_user(
-        username="testuser",
+        username="testseller",
         email="testuser@example.com",
         password="1234"
     )
@@ -52,6 +55,32 @@ def new_user() -> CustomUser:
     )
     return user_data
 
+
+@pytest.fixture(scope="function")
+def list_categories() -> list[Category]:
+    cats_data = [
+        {"name": "Овощи"},
+        {"name": "Фрукты"}
+    ]
+    resp = []
+    for cat in cats_data:
+        resp.append(Category.objects.create(name=cat["name"]))
+    return resp
+
+
+@pytest.fixture(scope="function")
+def new_product(create_seller: CustomUser, list_categories: list[Category]) -> tuple[Product, CustomUser]:
+    pr = Product.objects.create(
+        name="string",
+        price=1,
+        count=1,
+        about={"mass": 100},
+        img="/",
+        seller_id=create_seller.pk
+    )
+    for cat in list_categories:
+        CategoryHasProduct.objects.create(product_id=pr.pk, category_id=cat.pk)
+    return (pr, create_seller)
 
 
 @pytest.fixture(autouse=True)

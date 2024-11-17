@@ -3,12 +3,14 @@ import logging
 from django.db import connection
 from django.http import HttpRequest
 from django.shortcuts import get_object_or_404
-from ninja import File, UploadedFile
-from ninja_extra import ControllerBase, api_controller, route
+from ninja import File, PatchDict, UploadedFile
+from ninja_extra import ControllerBase, api_controller, route, permissions
+from ninja_extra.permissions.common import IsAdminUser
 
+from category.models import CategoryHasProduct
 from product.models import Product
-from product.permissions import IsSeller
-from product.schemas import CreateProduct, ProductOut
+from product.permissions import IsOwnerProduct, IsSeller
+from product.schemas import CreateProduct, PatchProduct, ProductOut
 from services.media_writer import UploadMediaFile
 
 logger = logging.getLogger("cons")
@@ -30,12 +32,19 @@ class ProductAPI(ControllerBase):
         template = ', '.join(["%s"] * len(data))
         with connection.cursor() as cursor:
             cursor.execute(f"CALL create_product({template})", data)
+
         obj = Product.objects.filter(name=product.name).order_by("-id")[0]
+        for cat_id in product.category_ids:
+            CategoryHasProduct.objects.create(product_id=obj.pk, category_id=cat_id)
         UploadMediaFile(file).write_product_img(obj)
         return obj
 
 
-    @route.delete("/{product_id}", response={204: None})
+    @route.delete(
+        "/{product_id}",
+        response={204: None},
+        permissions=[IsOwnerProduct | IsAdminUser]
+    )
     def del_product(self, product_id: int):
         product = get_object_or_404(Product, id=product_id)
         product.delete()
@@ -53,6 +62,18 @@ class ProductAPI(ControllerBase):
         return products
 
 
-    @route.patch("/{product_id}", response={200: ProductOut})
-    def patch_product(self, product_id: int):
-        pass
+    @route.patch(
+        "/{product_id}",
+        response={200: ProductOut},
+        permissions=[IsOwnerProduct | IsAdminUser]
+    )
+    def patch_product(self, product_id: int, payload: PatchDict[PatchProduct]):
+        obj = get_object_or_404(Product, id=product_id)
+        about = payload.pop("about")
+        if about:
+            obj.about = obj.about | about
+
+        for attr, val in payload.items():
+            setattr(obj, attr, val)
+        obj.save()
+        return obj
