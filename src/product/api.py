@@ -67,11 +67,16 @@ class ProductAPI(ControllerBase):
         response={200: ProductOut},
         permissions=[IsOwnerProduct | IsAdminUser]
     )
-    def patch_product(self, product_id: int, payload: PatchDict[PatchProduct]):
+    def patch_product(self,
+        product_id: int,
+        payload: PatchDict[PatchProduct],
+        file: UploadedFile = File(None)
+    ):
         obj = get_object_or_404(Product, id=product_id)
-        about = payload.pop("about")
-        if about:
-            obj.about = obj.about | about
+        if payload.get("about"):
+            obj.about = obj.about | payload.pop("about")
+        if file:
+            UploadMediaFile(file).write_product_img(obj)
 
         for attr, val in payload.items():
             setattr(obj, attr, val)
