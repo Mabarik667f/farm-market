@@ -8,9 +8,10 @@ from pathlib import Path
 from django.db import connection
 from cart.models import CartItem
 from category.models import Category
+from tests.helpers.common import OrderData
 from user.models import CustomUser, Role, RoleForUser
 from tests.helpers import ProductData, CartData
-from tests.helpers.api import create_product, create_cart_item
+from tests.helpers.api import create_order, create_product, create_cart_item, create_user
 
 logger = logging.getLogger("cons")
 
@@ -35,11 +36,7 @@ def execute_sql_files():
 
 @pytest.fixture(scope="function")
 def create_seller():
-    user = CustomUser.objects.create_user(
-        username="testseller",
-        email="testuser@example.com",
-        password="1234"
-    )
+    user = create_user("testseller", "testuser2@example.com")
     role = Role.objects.get(name="S")
     RoleForUser.objects.create(user_id=user.pk, role_id=role.pk)
     return user
@@ -47,12 +44,7 @@ def create_seller():
 
 @pytest.fixture(scope="function")
 def new_user() -> CustomUser:
-    user_data = CustomUser.objects.create_user(
-        username="testuser",
-        email="testuser@example.com",
-        password="1234"
-    )
-    return user_data
+    return create_user("testuser", "testuser@example.com")
 
 
 @pytest.fixture(scope="function")
@@ -86,12 +78,21 @@ def new_cart(
     return CartData(new_user, cart)
 
 
+@pytest.fixture(scope="function")
+def new_order(
+    new_cart: CartData
+) -> OrderData:
+    order = create_order(new_cart.user.pk, new_cart.cart_items)
+    return OrderData(new_cart.user, order)
+
+
 @pytest.fixture(autouse=True)
 def monkeypatch_dir(monkeypatch: pytest.MonkeyPatch):
     test_dir = Path("test_dir/")
     test_dir.mkdir(exist_ok=True)
     monkeypatch.chdir("test_dir/")
-    os.mkdir("media")
+    media = Path("media/")
+    media.mkdir(exist_ok=True)
     yield
     monkeypatch.chdir("..")
     shutil.rmtree("test_dir/")

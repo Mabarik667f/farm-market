@@ -4,8 +4,9 @@ __all__ = (
     "BaseTestClass",
     "ProductData",
     "CartData",
+    "OrderData",
 )
 
 from .dummy_files import create_img
 from .headers import get_auth_header
-from .common import BaseTestClass, ProductData, CartData
+from .common import BaseTestClass, ProductData, CartData, OrderData

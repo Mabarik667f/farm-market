@@ -9,7 +9,7 @@ from category.api import CategoryAPI
 from user.api import UserAPI
 from product.api import ProductAPI
 from cart.api import CartAPI
-from order.api import router as order_router
+from order.api import OrderAPI
 from user.models import CustomUser
 
 logger = logging.getLogger("cons")
@@ -32,4 +32,4 @@ api.register_controllers(UserAPI)
 api.register_controllers(CategoryAPI)
 api.register_controllers(ProductAPI)
 api.register_controllers(CartAPI)
-api.add_router("/orders/", order_router)
+api.register_controllers(OrderAPI)

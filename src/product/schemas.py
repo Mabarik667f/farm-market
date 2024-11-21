@@ -33,3 +33,11 @@ class ProductOut(Product):
     img: str
     about: dict[str, Any] | None = None
     categories: list[Category]
+
+
+class ProductOutForOrder(Schema):
+    id: int
+    name: str
+    price: PositiveInt
+    seller: Profile
+    img: str
