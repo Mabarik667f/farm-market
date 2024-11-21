@@ -5,12 +5,13 @@ from django.db import models
 class Order(models.Model):
 
     address = models.CharField(max_length=255)
-    phone = models.CharField(
+    phone = models.CharField(validators=[
         RegexValidator(
             regex=r'7(\d{10})',
             message="Введите номер телефона в Российском формате",
             code="invalid_create_order"
         )
+    ]
     )
     user = models.ForeignKey(
         to="user.CustomUser",

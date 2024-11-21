@@ -80,11 +80,13 @@ $$;
 CREATE OR REPLACE PROCEDURE create_order(
     user_id BIGINT,
     address CHARACTER VARYING(255),
-    phone CHARACTER VARYING
+    phone CHARACTER VARYING,
+    created TIMESTAMP WITH TIME ZONE
 )
 LANGUAGE SQL
 AS $$
-INSERT INTO order_order (address, phone, user_id) VALUES (address, phone, user_id)
+INSERT INTO order_order (address, phone, user_id, created)
+VALUES (address, phone, user_id, created)
 $$;
 
 CREATE OR REPLACE PROCEDURE create_order_item(
