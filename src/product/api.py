@@ -4,6 +4,7 @@ from django.db import IntegrityError, connection
 from django.http import Http404, HttpRequest
 from django.shortcuts import get_object_or_404, get_list_or_404
 from ninja import File, PatchDict, UploadedFile
+from ninja.pagination import paginate
 from ninja_extra import ControllerBase, api_controller, route
 from ninja_extra.permissions.common import IsAdminUser
 
@@ -56,6 +57,7 @@ class ProductAPI(ControllerBase):
         return get_object_or_404(Product, id=product_id)
 
     @route.get("/", response={200: list[ProductOut]})
+    @paginate
     def list_products(self):
         products = Product.objects.all()
         return products

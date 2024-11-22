@@ -84,7 +84,7 @@ class TestCasesforProducts(BaseTestClass):
     def tests_get_list_products(self, p_client: TestClient, new_product: ProductData):
         response = p_client.get(f'/')
         assert response.status_code == 200
-        assert len(response.json()) == 1
+        assert len(response.json()["items"]) == 1
 
     def tests_del_product(
         self,
