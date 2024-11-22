@@ -11,7 +11,7 @@ from category.models import Category
 from tests.helpers.common import OrderData
 from user.models import CustomUser, Role, RoleForUser
 from tests.helpers import ProductData, CartData
-from tests.helpers.api import create_order, create_product, create_cart_item, create_user
+from tests.helpers.api import create_category, create_order, create_product, create_cart_item, create_user
 
 logger = logging.getLogger("cons")
 
@@ -55,7 +55,7 @@ def list_categories() -> list[Category]:
     ]
     resp = []
     for cat in cats_data:
-        resp.append(Category.objects.create(name=cat["name"]))
+        resp.append(create_category(name=cat["name"]))
     return resp
 
 

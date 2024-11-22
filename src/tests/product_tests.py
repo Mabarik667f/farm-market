@@ -5,8 +5,9 @@ from ninja import UploadedFile
 from ninja_extra.testing import TestClient
 from product.api import ProductAPI
 from product.models import Product
+from tests.helpers.api import create_category
 from user.models import CustomUser
-from category.models import Category
+from category.models import Category, CategoryHasProduct
 from tests.helpers import create_img, BaseTestClass, ProductData
 
 logger = logging.getLogger("cons")
@@ -15,6 +16,11 @@ logger = logging.getLogger("cons")
 @pytest.fixture
 def p_client():
     return TestClient(ProductAPI)
+
+
+@pytest.fixture
+def create_new_category():
+    return create_category("Specially")
 
 
 class TestCasesforProducts(BaseTestClass):
@@ -116,3 +122,36 @@ class TestCasesforProducts(BaseTestClass):
         assert j["count"] == 100
         assert j["about"]['mass'] == 200 and j["about"]["t"] == "ls"
         assert j["img"] == f"/media/product{new_product.product.pk}/dummy.png"
+
+    def tests_add_category_for_product(
+        self,
+        p_client: TestClient,
+        new_product: ProductData,
+        create_new_category: Category
+    ):
+        self.set_headers(new_product.user)
+        response = p_client.put(f"/{new_product.product.pk}/{create_new_category.pk}",
+            headers=self.headers)
+
+        assert response.status_code == 201
+        assert len(response.json()["categories"]) == 3
+
+    def tests_del_category_for_product(
+        self,
+        p_client: TestClient,
+        new_product: ProductData
+    ):
+        self.set_headers(new_product.user)
+        pr_id = new_product.product.pk
+        categories = CategoryHasProduct.objects.filter(product_id=pr_id).prefetch_related("category")
+        response = p_client.delete(f"/{pr_id}/{categories[0].category.pk}",
+            headers=self.headers)
+
+        assert response.status_code == 200
+        assert len(response.json()["categories"]) == 1
+
+        response = p_client.delete(f"/{pr_id}/{categories[0].category.pk}",
+            headers=self.headers)
+
+        assert response.status_code == 400
+        assert CategoryHasProduct.objects.count() == 1

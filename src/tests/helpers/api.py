@@ -16,6 +16,8 @@ def create_user(username: str, email: str) -> CustomUser:
     )
     return user_data
 
+def create_category(name: str) -> Category:
+    return Category.objects.create(name=name)
 
 def create_product(seller_id: int, categories: list[Category]) -> Product:
     pr = Product.objects.create(

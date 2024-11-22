@@ -3,7 +3,8 @@ from ninja_extra.testing import TestClient
 from category.api import CategoryAPI
 import pytest
 
-from category.models import Category
+from category.models import Category, CategoryHasProduct
+from tests.helpers.common import ProductData
 logger = logging.getLogger("cons")
 
 @pytest.fixture
@@ -37,7 +38,15 @@ class TestCasesforCategories():
         assert response.status_code == 200
         assert len(response.json()) == 2
 
-    def tests_del_category(self, n_client: TestClient, new_category: Category):
-        response = n_client.delete(f"/{new_category.pk}", content_type="json")
-
+    def tests_del_category(
+        self,
+        n_client: TestClient,
+        new_product: ProductData
+    ):
+        pr_id = new_product.product.pk
+        categories = CategoryHasProduct.objects.filter(product_id=pr_id).prefetch_related("category")
+        response = n_client.delete(f"/{categories[0].category.pk}", content_type="json")
         assert response.status_code == 204
+
+        response = n_client.delete(f"/{categories[0].category.pk}", content_type="json")
+        assert response.status_code == 400
