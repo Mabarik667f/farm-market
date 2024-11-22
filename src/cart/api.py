@@ -5,13 +5,18 @@ from ninja_jwt.authentication import JWTAuth
 
 from cart.models import CartItem
 from cart.schemas import AddCartItem, CartItemOut
-
+from product.models import Product
+from config.exceptions import InsufficientProductError
 
 @api_controller("/cart", tags=["cart"], auth=JWTAuth())
 class CartAPI(ControllerBase):
 
     @route.post("/",  response={201: CartItemOut})
     def add_to_cart(self, cart: AddCartItem):
+
+        product = get_object_or_404(Product, id=cart.product_id)
+        if product.count < cart.count:
+            raise InsufficientProductError()
 
         dict_data = {
             "product_id": cart.product_id,

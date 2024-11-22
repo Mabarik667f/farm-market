@@ -25,7 +25,7 @@ class TestCasesforCart(BaseTestClass):
     ):
         data = {
             "product_id": new_product.product.pk,
-            "count": 2,
+            "count": 3,
             "delivery_date": timezone.now()
         }
         response = c_client.post("/", json=data, headers=self.headers)
@@ -33,6 +33,10 @@ class TestCasesforCart(BaseTestClass):
         assert response.status_code == 401
 
         self.set_headers(new_user)
+        response = c_client.post("/", json=data, headers=self.headers)
+        assert response.status_code == 400
+
+        data["count"] = 2
         response = c_client.post("/", json=data, headers=self.headers)
 
         assert response.status_code == 201

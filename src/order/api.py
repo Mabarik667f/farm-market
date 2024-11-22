@@ -3,9 +3,10 @@ from datetime import timezone
 from ninja_extra import ControllerBase, api_controller, route
 from ninja_jwt.authentication import JWTAuth
 from django.shortcuts import get_object_or_404, get_list_or_404
-from django.db import connection
+from django.db import connection, transaction
 
 from cart.models import CartItem
+from config.exceptions import InsufficientProductError
 from order.models import Order, History as HistoryModel
 from order.permissions import IsOrderOwner
 from order.schemas import CreateOrder, History, OrderOut, get_order_out_schema
@@ -13,7 +14,6 @@ from order.schemas import CreateOrder, History, OrderOut, get_order_out_schema
 
 logger = logging.getLogger('cons')
 
-#permissions - user is owner order
 @api_controller("/orders", tags=["orders"], permissions=[], auth=JWTAuth())
 class OrderAPI(ControllerBase):
 
@@ -28,21 +28,26 @@ class OrderAPI(ControllerBase):
         }
         order_data_ls = list(order_data.values())
         order_template = ", ".join(["%s"] * len(order_data_ls))
-        with connection.cursor() as cursor:
-            cursor.execute(f"CALL create_order({order_template})", order_data_ls)
-            obj = Order.objects.get(created=payload.created.replace(tzinfo=timezone.utc), user_id=user.pk)
+        with transaction.atomic():
+            with connection.cursor() as cursor:
+                cursor.execute(f"CALL create_order({order_template})", order_data_ls)
+                obj = Order.objects.get(created=payload.created.replace(tzinfo=timezone.utc), user_id=user.pk)
 
-            cart_items = [get_object_or_404(CartItem, id=id) for id in payload.cart_item_ids]
-            for item in cart_items:
-                item_data = {
-                    "order_id": obj.pk,
-                    "product_id": item.pk,
-                    "count": item.count,
-                    "delivery_date": item.delivery_date
-                }
-                data = list(item_data.values())
-                item_template = ", ".join(["%s"] * len(data))
-                cursor.execute(f"CALL create_order_item({item_template})", data)
+                cart_items = CartItem.objects.filter(id__in=payload.cart_item_ids).select_related("product")
+                for item in cart_items:
+                    if item.count > item.product.count:
+                        raise InsufficientProductError()
+                    item_data = {
+                        "order_id": obj.pk,
+                        "product_id": item.pk,
+                        "count": item.count,
+                        "delivery_date": item.delivery_date
+                    }
+                    data = list(item_data.values())
+                    item_template = ", ".join(["%s"] * len(data))
+                    cursor.execute(f"CALL create_order_item({item_template})", data)
+                    item.product.count -= item.count
+                    item.product.save()
 
         return get_order_out_schema(obj)
 

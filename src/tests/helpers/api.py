@@ -21,7 +21,7 @@ def create_product(seller_id: int, categories: list[Category]) -> Product:
     pr = Product.objects.create(
         name="string",
         price=1,
-        count=1,
+        count=2,
         about={"mass": 100},
         img="/",
         seller_id=seller_id

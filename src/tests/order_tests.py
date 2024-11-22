@@ -4,6 +4,7 @@ import pytest
 from ninja_extra.testing import TestClient
 from order.api import OrderAPI
 from order.models import Order, OrderItem
+from product.models import Product
 from tests.helpers import BaseTestClass
 from tests.helpers.common import CartData, OrderData
 from user.models import CustomUser
@@ -20,7 +21,6 @@ class TestCasesForOrders(BaseTestClass):
 
     def tests_create_order(self, o_client: TestClient, new_cart: CartData):
         self.set_headers(new_cart.user)
-        logger.info(new_cart.cart_items)
         data = {
             "address": "Test adr 123",
             "phone": "79430575519",
@@ -29,6 +29,11 @@ class TestCasesForOrders(BaseTestClass):
         response = o_client.post("/", json=data, headers=self.headers)
         assert len(response.json()["products"]) == 2
         assert response.status_code == 201
+        assert Product.objects.get(id=response.json()["products"][0]["product"]["id"]).count == 0
+
+        response = o_client.post("/", json=data, headers=self.headers)
+        assert response.status_code == 400
+        assert len(Order.objects.all()) == 1
 
     def tests_get_order(self, o_client: TestClient, new_order: OrderData):
         self.set_headers(new_order.user)

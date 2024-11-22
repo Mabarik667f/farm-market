@@ -10,3 +10,8 @@ class UniqueException(APIException):
 class PhoneFormatException(APIException):
     status_code = status.HTTP_400_BAD_REQUEST
     default_detail = "Неверный формат номера!"
+
+
+class InsufficientProductError(APIException):
+    status_code = status.HTTP_400_BAD_REQUEST
+    default_detail = "Количество превышает текущую доступность товара!"
