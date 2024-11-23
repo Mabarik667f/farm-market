@@ -39,7 +39,7 @@ class OrderAPI(ControllerBase):
                         raise InsufficientProductError()
                     item_data = {
                         "order_id": obj.pk,
-                        "product_id": item.pk,
+                        "product_id": item.product.pk,
                         "count": item.count,
                         "delivery_date": item.delivery_date
                     }
