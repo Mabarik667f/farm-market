@@ -58,9 +58,13 @@ class ProductAPI(ControllerBase):
 
     @route.get("/", response={200: list[ProductOut]})
     @paginate
-    def list_products(self):
-        products = Product.objects.all()
-        return products
+    def list_products(self, category_ids: list[int] = []):
+        if category_ids:
+            q = CategoryHasProduct.objects.filter(category_id__in=category_ids).distinct("product_id")
+        else:
+            q = CategoryHasProduct.objects.all().distinct("product_id")
+        q.select_related("product")
+        return [obj.product for obj in q]
 
     @route.put("/{product_id}/{cat_id}", response={201: ProductOut})
     def add_category_for_product(self, product_id: int, cat_id: int):
