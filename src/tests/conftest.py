@@ -23,7 +23,7 @@ def enable_db_access_for_all_tests(db):
 @pytest.fixture(autouse=True)
 def execute_sql_files():
 
-    files = ["procedures.sql", "trigger_functions.sql", "triggers.sql", "insert_values.sql"]
+    files = ["procedures.sql", "trigger_functions.sql", "triggers.sql", "roles.sql"]
     for f in files:
         path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", f"sql_scripts/{f}"))
 
