@@ -28,7 +28,8 @@
       "@/*": ["src/*"],
       "@intefaces/*": ["src/interfaces/*"],
       "@modules*": ["src/modules/*"],
-      "@assets/*": ["src/assets/*"]
+      "@assets/*": ["src/assets/*"],
+      "@pages/*": ["src/pages/*"]
     }
   },
   "include": [

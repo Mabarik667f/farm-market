@@ -10,6 +10,7 @@ export default defineConfig({
       "@interfaces": path.resolve(__dirname, ".src/interfaces"),
       "@modules": path.resolve(__dirname, ".src/modules"),
       "@assets": path.resolve(__dirname, ".src/assets"),
+      "@pages": path.resolve(__dirname, ".src/pages"),
     },
   },
 });
