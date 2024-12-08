@@ -3,7 +3,7 @@ from django.utils import timezone
 from django.contrib.auth.hashers import make_password
 from django.shortcuts import get_object_or_404
 
-from user.schemas import AddRole, Register, UserOut, UserOutWithEmail
+from user.schemas import AddRole, Register
 from user.models import CustomUser, RoleForUser, Role as RoleModel
 
 def create_user(payload: Register) -> CustomUser:
