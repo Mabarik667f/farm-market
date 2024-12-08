@@ -9,7 +9,7 @@ logger = logging.getLogger('cons')
 
 @api_controller('/users', tags=['users'], permissions=[])
 class UserAPI(ControllerBase):
-    @route.post('/register', response={201: UserOutWithEmail}, permissions=[])
+    @route.post('/register', response={201: UserOutWithEmail}, auth=None)
     def register(self, payload: Register):
         return crud.create_user(payload)
 
