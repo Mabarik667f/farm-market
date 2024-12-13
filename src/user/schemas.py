@@ -1,8 +1,10 @@
 import re
+import jwt
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
+from django.conf import settings
 from ninja import Schema
-from ninja_jwt.schema import TokenObtainPairInputSchema
+from ninja_jwt.schema import TokenObtainPairInputSchema, TokenVerifyInputSchema
 from enum import Enum
 from pydantic import EmailStr, field_validator
 from pydantic_core.core_schema import FieldValidationInfo
@@ -130,3 +132,17 @@ class MyTokenObtainPair(TokenObtainPairInputSchema):
         out_dict = self.get_response_schema_init_kwargs()
         out_dict.update(user=UserOut.from_orm(self._user))
         return MyTokenObtainPairOut(**out_dict)
+
+
+class MyTokenVerifyOut(Schema):
+    access: str
+    user: UserOut
+
+
+class MyTokenVerify(TokenVerifyInputSchema):
+
+    def output_schema(self) -> MyTokenVerifyOut:
+        payload = jwt.decode(self.token, key=settings.SECRET_KEY, algorithms="HS256")
+        user_obj = CustomUser.objects.get(pk=payload["user_id"])
+        user = UserOut.from_orm(user_obj)
+        return MyTokenVerifyOut(access=self.token, user=user)

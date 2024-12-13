@@ -1,5 +1,5 @@
 function ProfilePage() {
-  return <></>;
+  return <>PROFILE</>;
 }
 
 export default ProfilePage;

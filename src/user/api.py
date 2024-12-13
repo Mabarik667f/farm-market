@@ -3,7 +3,7 @@ import logging
 from ninja_jwt.authentication import JWTAuth
 
 from user import crud
-from user.schemas import AddRole, Register, UserOut, UserOutWithEmail, MyTokenObtainPairOut, MyTokenObtainPair
+from user.schemas import AddRole, MyTokenVerify, Register, UserOut, UserOutWithEmail, MyTokenObtainPairOut, MyTokenObtainPair, MyTokenVerifyOut
 
 from ninja_extra import ControllerBase, api_controller, route
 from ninja_jwt.controller import TokenObtainPairController, TokenVerificationController
@@ -41,3 +41,9 @@ class MyTokenObtainPairController(TokenObtainPairController, TokenVerificationCo
     )
     def obtain_token(self, user_token: MyTokenObtainPair):
         return user_token.output_schema()
+
+    @route.post(
+        "/verify", response=MyTokenVerifyOut, url_name="token_verify"
+    )
+    def verify_token(self, token: MyTokenVerify):
+        return token.output_schema()

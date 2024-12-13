@@ -1,14 +1,14 @@
 import React, { useContext, useState } from "react";
 import IRegister from "../interfaces/IRegister";
 import IFormInp from "@/interfaces/base/IFormInp";
-import { Context } from "@/main";
 import { Input, Button, FormInpField } from "@/UI";
 import { useNavigate } from "react-router-dom";
 import formErrors from "@/helpers/errors/formErrors";
+import { AuthContext } from "@/contexts/AuthContext";
 
 const RegisterForm = (): JSX.Element => {
   const navigate = useNavigate();
-  const { store } = useContext(Context);
+  const { store } = useContext(AuthContext);
   const [reg, setReg] = useState<IRegister>({
     email: "",
     username: "",
@@ -66,7 +66,7 @@ const RegisterForm = (): JSX.Element => {
 
   return (
     <form
-      className="flex justify-center items-center flex-col h-screen"
+      className="flex justify-center items-center flex-col p-20 border-2 border-teal-400 rounded"
       method="post"
       onSubmit={registerEvent}
     >
@@ -93,7 +93,9 @@ const RegisterForm = (): JSX.Element => {
         ))}
       </div>
       <div className="mt-2">
-        <Button type="submit">Зарегистрироваться</Button>
+        <Button className="border-teal-400 bg-teal-400" type="submit">
+          Зарегистрироваться
+        </Button>
       </div>
     </form>
   );
