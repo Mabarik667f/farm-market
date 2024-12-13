@@ -4,6 +4,7 @@ from ninja import File, PatchDict, UploadedFile
 from ninja.pagination import paginate
 from ninja_extra import ControllerBase, api_controller, route
 from ninja_extra.permissions.common import IsAdminUser
+from ninja_jwt.authentication import JWTAuth
 
 from product.permissions import IsOwnerProduct, IsSeller
 from product.schemas import CreateProduct, PatchProduct, ProductOut
@@ -26,11 +27,11 @@ class ProductAPI(ControllerBase):
     def del_product(self, product_id: int):
         crud.del_product(product_id)
 
-    @route.get("/{product_id}", response={200: ProductOut})
+    @route.get("/{product_id}", response={200: ProductOut}, auth=None)
     def get_product(self, product_id: int):
         return crud.get_product(product_id)
 
-    @route.get("/", response={200: list[ProductOut]})
+    @route.get("/", response={200: list[ProductOut]}, auth=None)
     @paginate
     def list_products(self, category_ids: list[int] = []):
         return crud.list_products(category_ids)

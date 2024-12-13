@@ -23,7 +23,7 @@ def new_user() -> CustomUser:
     return obj
 
 
-class TestCasesforCategories:
+class TestCasesforUsers:
 
     def tests_register(self, u_client: TestClient):
         data = user_data | {"password2": "+Password447"}

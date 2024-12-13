@@ -1,5 +1,7 @@
 import logging
 
+from ninja_jwt.authentication import JWTAuth
+
 from user import crud
 from user.schemas import AddRole, Register, UserOut, UserOutWithEmail, MyTokenObtainPairOut, MyTokenObtainPair
 

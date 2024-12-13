@@ -8,11 +8,11 @@ class CategoryAPI(ControllerBase):
     def create_category(self, payload: CreateCategory):
         return crud.create_category(payload)
 
-    @route.get('/{category_id}', response={200: CategoryOut})
+    @route.get('/{category_id}', response={200: CategoryOut}, auth=None)
     def get_category(self, category_id: int):
         return crud.get_category(category_id)
 
-    @route.get("/", response={200: list[CategoryOut]})
+    @route.get("/", response={200: list[CategoryOut]}, auth=None)
     def list_categories(self):
         return crud.list_categories()
 
