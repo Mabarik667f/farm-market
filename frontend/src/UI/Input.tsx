@@ -1,13 +1,8 @@
 import React from "react";
 
-interface IInput {
-  type: React.InputHTMLAttributes<HTMLImageElement>["type"];
-  id?: string;
-  val: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}
+type IInput = React.InputHTMLAttributes<HTMLInputElement>;
 
-function Input({ type = "text", id, val, onChange }: IInput): JSX.Element {
-  return <input type={type} value={val} onChange={onChange} id={id} />;
-}
+const Input = (props: IInput): JSX.Element => {
+  return <input {...props} />;
+};
 export default Input;

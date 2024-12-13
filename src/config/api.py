@@ -1,12 +1,11 @@
 import logging
 from ninja_extra import NinjaExtraAPI
 from ninja.security import APIKeyHeader
-from ninja_jwt.controller import NinjaJWTDefaultController
 from ninja_jwt.authentication import JWTBaseAuthentication
 from django.http import HttpRequest
 
 from category.api import CategoryAPI
-from user.api import UserAPI
+from user.api import UserAPI, MyTokenObtainPairController
 from product.api import ProductAPI
 from cart.api import CartAPI
 from order.api import OrderAPI
@@ -26,7 +25,7 @@ class GlobalAuth(APIKeyHeader, JWTBaseAuthentication):
         return self.jwt_authenticate(request, token=key)
 
 api = NinjaExtraAPI(title="Farm market API", auth=GlobalAuth())
-api.register_controllers(NinjaJWTDefaultController)
+api.register_controllers(MyTokenObtainPairController)
 
 api.register_controllers(UserAPI)
 api.register_controllers(CategoryAPI)

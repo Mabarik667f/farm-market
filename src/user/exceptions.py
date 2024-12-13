@@ -4,11 +4,15 @@ from config.exceptions import UniqueException
 
 
 class UsernameUniqueException(UniqueException):
-    pass
+    default_detail = "Пользователь с таким логином уже существует"
 
 
 class EmailUniqueException(UniqueException):
-    pass
+    default_detail = "Email занят"
+
+
+class PasswordValidationException(APIException):
+    status_code = status.HTTP_400_BAD_REQUEST
 
 
 class PasswordsMatchException(APIException):

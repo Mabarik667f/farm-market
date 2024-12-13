@@ -1,9 +1,10 @@
 import logging
 
 from user import crud
-from user.schemas import AddRole, Register, UserOut, UserOutWithEmail
+from user.schemas import AddRole, Register, UserOut, UserOutWithEmail, MyTokenObtainPairOut, MyTokenObtainPair
 
 from ninja_extra import ControllerBase, api_controller, route
+from ninja_jwt.controller import TokenObtainPairController, TokenVerificationController
 
 logger = logging.getLogger('cons')
 
@@ -30,3 +31,11 @@ class UserAPI(ControllerBase):
     def del_role(self, user_id: int, role: AddRole):
         crud.del_role(user_id, role)
         return crud.get_user(user_id)
+
+@api_controller("/token", tags=["Auth"], auth=None)
+class MyTokenObtainPairController(TokenObtainPairController, TokenVerificationController):
+    @route.post(
+        "/pair", response=MyTokenObtainPairOut, url_name="token_obtain_pair"
+    )
+    def obtain_token(self, user_token: MyTokenObtainPair):
+        return user_token.output_schema()

@@ -1,5 +1,7 @@
+import { RegisterForm } from "@/modules/Register";
+
 function RegisterPage() {
-  return <></>;
+  return <RegisterForm />;
 }
 
 export default RegisterPage;
