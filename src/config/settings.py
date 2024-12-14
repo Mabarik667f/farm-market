@@ -221,7 +221,7 @@ NINJA_JWT = {
 
     # For Controller Schemas
     # FOR OBTAIN PAIR
-    'TOKEN_OBTAIN_PAIR_INPUT_SCHEMA': "ninja_jwt.schema.TokenObtainPairInputSchema",
+    'TOKEN_OBTAIN_PAIR_INPUT_SCHEMA': "user.schemas.MyTokenObtainPairInput",
     'TOKEN_OBTAIN_PAIR_REFRESH_INPUT_SCHEMA': "ninja_jwt.schema.TokenRefreshInputSchema",
     # FOR SLIDING TOKEN
     'TOKEN_OBTAIN_SLIDING_INPUT_SCHEMA': "ninja_jwt.schema.TokenObtainSlidingInputSchema",

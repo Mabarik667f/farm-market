@@ -1,10 +1,16 @@
 import re
 import jwt
+from typing import Type
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.conf import settings
 from ninja import Schema
-from ninja_jwt.schema import TokenObtainPairInputSchema, TokenVerifyInputSchema
+from ninja_jwt.tokens import RefreshToken
+from ninja_jwt.schema import (
+    TokenObtainInputSchemaBase,
+    TokenRefreshInputSchema,
+    TokenVerifyInputSchema,
+)
 from enum import Enum
 from pydantic import EmailStr, field_validator
 from pydantic_core.core_schema import FieldValidationInfo
@@ -26,7 +32,6 @@ class Register(Schema):
     password: str
     password2: str
 
-
     @field_validator("username")
     def uniqie_username(cls, v):
         try:
@@ -35,7 +40,9 @@ class Register(Schema):
                 raise UniqueException
             return v
         except UniqueException:
-            raise UsernameUniqueException({"detail": {"username": "Пользователь с таким логином уже существует"}})
+            raise UsernameUniqueException(
+                {"detail": {"username": "Пользователь с таким логином уже существует"}}
+            )
 
     @field_validator("email")
     def uniqie_email(cls, v):
@@ -47,7 +54,6 @@ class Register(Schema):
         except UniqueException:
             raise EmailUniqueException({"detail": {"email": "Email занят"}})
 
-
     @field_validator("password")
     def password_check(cls, v):
         try:
@@ -58,8 +64,10 @@ class Register(Schema):
 
     @field_validator("password2")
     def passwords_match(cls, v, info: FieldValidationInfo):
-        if "password" in info.data and v != info.data['password']:
-            raise PasswordsMatchException({"detail": {"password": "Пароли не совпадают"}})
+        if "password" in info.data and v != info.data["password"]:
+            raise PasswordsMatchException(
+                {"detail": {"password": "Пароли не совпадают"}}
+            )
         return v
 
 
@@ -79,6 +87,7 @@ class AddRole(Role):
         if v == "D":
             raise DefaultRoleException()
         return v
+
 
 class RoleOut(Role):
     id: int
@@ -127,11 +136,36 @@ class MyTokenObtainPairOut(Schema):
     user: UserOut
 
 
-class MyTokenObtainPair(TokenObtainPairInputSchema):
-    def output_schema(self):
-        out_dict = self.get_response_schema_init_kwargs()
-        out_dict.update(user=UserOut.from_orm(self._user))
-        return MyTokenObtainPairOut(**out_dict)
+class MyTokenObtainPairInput(TokenObtainInputSchemaBase):
+
+    @classmethod
+    def get_response_schema(cls) -> Type[Schema]:
+        return MyTokenObtainPairOut
+
+    @classmethod
+    def get_token(cls, user) -> dict:
+        values = {}
+        refresh = RefreshToken.for_user(user)
+        values["refresh"] = str(refresh)
+        values["access"] = str(refresh.access_token) #type: ignore
+        values.update(user=UserOut.from_orm(user))
+        return values
+
+
+class MyTokenRefresh(TokenRefreshInputSchema):
+
+    @classmethod
+    def get_response_schema(cls) -> Type[Schema]:
+        return MyTokenObtainPairOut
+
+    def output_schema(self) -> Type[Schema]:
+        payload = jwt.decode(self.refresh, key=settings.SECRET_KEY, algorithms="HS256") #type: ignore
+        user_obj = CustomUser.objects.get(pk=payload["user_id"])
+        refresh = RefreshToken.for_user(user_obj)
+        user = UserOut.from_orm(user_obj)
+        return MyTokenObtainPairOut(
+            access=str(refresh.access_token), refresh=str(refresh), user=user #type: ignore
+        )
 
 
 class MyTokenVerifyOut(Schema):
@@ -142,7 +176,7 @@ class MyTokenVerifyOut(Schema):
 class MyTokenVerify(TokenVerifyInputSchema):
 
     def output_schema(self) -> MyTokenVerifyOut:
-        payload = jwt.decode(self.token, key=settings.SECRET_KEY, algorithms="HS256")
+        payload = jwt.decode(self.token, key=settings.SECRET_KEY, algorithms="HS256") #type: ignore
         user_obj = CustomUser.objects.get(pk=payload["user_id"])
         user = UserOut.from_orm(user_obj)
         return MyTokenVerifyOut(access=self.token, user=user)

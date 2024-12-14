@@ -29,7 +29,7 @@ CALL create_user (
     NOW (),
     'Админ',
     'Пользователь',
-    'admin.jpg'
+    'default.jpg'
 );
 
 CALL create_user (
@@ -42,7 +42,7 @@ CALL create_user (
     NOW (),
     'Джон',
     'Доу',
-    'john.jpg'
+    'default.jpg'
 );
 
 CALL create_user (
@@ -55,7 +55,7 @@ CALL create_user (
     NOW (),
     'Джейн',
     'Смит',
-    'jane.jpg'
+    'default.jpg'
 );
 
 CALL create_user (
@@ -68,7 +68,7 @@ CALL create_user (
     NOW (),
     'Алиса',
     'Джонсон',
-    'alice.jpg'
+    'default.jpg'
 );
 
 CALL create_user (
@@ -81,7 +81,7 @@ CALL create_user (
     NOW (),
     'Боб',
     'Браун',
-    'bob.jpg'
+    'default.jpg'
 );
 
 CALL create_user (
@@ -94,7 +94,7 @@ CALL create_user (
     NOW (),
     'Чарли',
     'Дэвис',
-    'charlie.jpg'
+    'default.jpg'
 );
 
 CALL create_user (
@@ -107,7 +107,7 @@ CALL create_user (
     NOW (),
     'Диана',
     'Уилсон',
-    'diana.jpg'
+    'default.jpg'
 );
 
 -- Добавление ролей
