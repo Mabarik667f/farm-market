@@ -78,6 +78,7 @@ export default class AuthStore {
         { withCredentials: true },
       );
       this.setInitData(response);
+      Cookies.set("refresh", response.data.resfresh);
     } catch {
       await this.logout();
     }
@@ -86,6 +87,10 @@ export default class AuthStore {
   setInitData(response: AxiosResponse) {
     localStorage.setItem("access", response.data.access);
     this.setAuth(true);
-    this.setUser(response.data.user);
+    const user = {
+      ...response.data.user,
+      roles: response.data.user.roles || [],
+    };
+    this.setUser(user);
   }
 }

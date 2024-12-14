@@ -1,5 +1,7 @@
+export type RoleName = "D" | "A" | "S";
+
 interface Role {
-  name: string;
+  name: RoleName;
 }
 
 export default interface IUser {
