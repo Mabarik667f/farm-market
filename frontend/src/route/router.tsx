@@ -1,11 +1,46 @@
 import { createBrowserRouter } from "react-router-dom";
-import { MainPage, LoginPage, ProfilePage, RegisterPage } from "@/pages";
+import {
+  MainPage,
+  LoginPage,
+  ProfilePage,
+  RegisterPage,
+  OrdersPage,
+  CartPage,
+} from "@/pages";
+import App from "@/App";
 import ProtectedRoute from "./ProtectedRoute";
 import IsAuthRoute from "./IsAuthRoute";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <MainPage />,
+    element: <App />,
+    children: [
+      { path: "", element: <MainPage /> },
+      {
+        path: "orders",
+        element: (
+          <ProtectedRoute>
+            <OrdersPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "cart",
+        element: (
+          <ProtectedRoute>
+            <CartPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "profile",
+        element: (
+          <ProtectedRoute>
+            <ProfilePage />
+          </ProtectedRoute>
+        ),
+      },
+    ],
   },
   {
     path: "/login",
@@ -21,14 +56,6 @@ const router = createBrowserRouter([
       <IsAuthRoute>
         <RegisterPage />
       </IsAuthRoute>
-    ),
-  },
-  {
-    path: "/profile",
-    element: (
-      <ProtectedRoute>
-        <ProfilePage />
-      </ProtectedRoute>
     ),
   },
 ]);
