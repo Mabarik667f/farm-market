@@ -3,8 +3,8 @@ import pytest
 import json
 from ninja import UploadedFile
 from ninja_extra.testing import TestClient
+from django.utils import timezone
 from product.api import ProductAPI
-from product.models import Product
 from tests.helpers.api import create_category
 from user.models import CustomUser
 from category.models import Category, CategoryHasProduct
@@ -35,8 +35,10 @@ class TestCasesforProducts(BaseTestClass):
                     "name": "string",
                     "price": 1,
                     "count": 1,
+                    "mass": 100.0,
+                    "shelf_life": timezone.now().strftime("%Y-%m-%d"),
                     "about": {
-                        "mass": 100
+                        "other": 100
                     },
                     "category_ids": [cat.pk for cat in categories]
                 }
@@ -59,7 +61,8 @@ class TestCasesforProducts(BaseTestClass):
         j = response.json()
         assert response.status_code == 201
         assert j["img"] == f"/media/product{j["id"]}/dummy.png"
-        assert len(j["about"]) == 1
+        assert j["about"]["other"] == 100
+        assert j["mass"] == 100.0
         assert len(j["categories"]) == 2
 
     def tests_fail_create_product(

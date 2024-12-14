@@ -18,6 +18,8 @@ def create_product(user_id: int, product: CreateProduct, file: File[UploadedFile
         "name": product.name,
         "price": product.price,
         "count": product.count,
+        "mass": product.mass,
+        "shelf_life": product.shelf_life,
         "about": json.dumps(product.about),
         "img": "/",
         "seller_id": user_id

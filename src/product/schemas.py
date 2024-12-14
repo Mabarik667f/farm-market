@@ -1,3 +1,4 @@
+from datetime import date
 import logging
 from typing import Any
 from ninja import Schema
@@ -13,6 +14,8 @@ class Product(Schema):
     name: str = Field(max_length=255)
     price: PositiveInt
     count: PositiveInt
+    mass: float
+    shelf_life: date
 
 
 class CreateProduct(Product):
@@ -25,7 +28,8 @@ class PatchProduct(Schema):
     price: PositiveInt | None = None
     count: PositiveInt | None = None
     about: dict[str, Any] | None = None
-
+    mass: float | None = None
+    shelf_life: date | None = None
 
 class ProductOut(Product):
     id: int
@@ -39,5 +43,6 @@ class ProductOutForOrder(Schema):
     id: int
     name: str
     price: PositiveInt
+    mass: float
     seller: Profile
     img: str

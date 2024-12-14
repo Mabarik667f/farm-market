@@ -49,7 +49,8 @@ def get_order_out_schema(order: OrderModel) -> OrderOut:
         name=pr.name,
         price=pr.price,
         img=pr.img,
-        seller=pr.seller)
+        seller=pr.seller,
+        mass=pr.mass)
         for pr in products]
 
     order_items_out = []

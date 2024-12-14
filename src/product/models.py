@@ -1,11 +1,12 @@
 from django.db import models
-from django.conf import settings
 
 
 class Product(models.Model):
     name = models.CharField(max_length=255)
     price = models.PositiveIntegerField()
     count = models.PositiveIntegerField()
+    mass = models.FloatField(default=0.0)
+    shelf_life = models.DateField(auto_now=True)
     about = models.JSONField()
     img = models.ImageField(upload_to="product/")
 

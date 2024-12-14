@@ -24,7 +24,9 @@ def create_product(seller_id: int, categories: list[Category]) -> Product:
         name="string",
         price=1,
         count=2,
-        about={"mass": 100},
+        mass=100.0,
+        shelf_life=timezone.now().strftime("%Y-%m-%d"),
+        about={"other": 100},
         img="/",
         seller_id=seller_id
     )

@@ -55,14 +55,16 @@ CREATE OR REPLACE PROCEDURE create_product(
     name CHARACTER VARYING(255),
     price INTEGER,
     count INTEGER,
+    mass NUMERIC,
+    shelf_life DATE,
     about JSONB,
     img CHARACTER VARYING,
     seller_id BIGINT
 )
 LANGUAGE SQL
 AS $$
-INSERT INTO product_product (name, price, count, about, img, seller_id)
-VALUES (name, price, count, about, img, seller_id)
+INSERT INTO product_product (name, price, count, about, img, seller_id, mass, shelf_life)
+VALUES (name, price, count, about, img, seller_id, mass, shelf_life)
 $$;
 
 CREATE OR REPLACE PROCEDURE create_cart_item(
