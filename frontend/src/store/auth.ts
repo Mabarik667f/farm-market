@@ -70,15 +70,12 @@ export default class AuthStore {
 
   async checkAuth() {
     try {
-      const response = await axios.post(
-        `${API_URL}/token/refresh`,
-        {
-          refresh: Cookies.get("refresh"),
-        },
-        { withCredentials: true },
-      );
+      const refresh = Cookies.get("refresh");
+      const response = await axios.post(`${API_URL}/token/refresh`, {
+        refresh,
+      });
       this.setInitData(response);
-      Cookies.set("refresh", response.data.resfresh);
+      Cookies.set("refresh", response.data.refresh);
     } catch {
       await this.logout();
     }

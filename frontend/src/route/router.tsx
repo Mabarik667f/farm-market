@@ -6,6 +6,7 @@ import {
   RegisterPage,
   OrdersPage,
   CartPage,
+  ProductPage,
 } from "@/pages";
 import App from "@/App";
 import ProtectedRoute from "./ProtectedRoute";
@@ -37,6 +38,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <ProfilePage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "product/:id",
+        element: (
+          <ProtectedRoute>
+            <ProductPage />
           </ProtectedRoute>
         ),
       },
