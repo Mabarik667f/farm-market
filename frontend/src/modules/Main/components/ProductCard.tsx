@@ -6,14 +6,14 @@ interface ProductCardProps {
 
 const ProductCard = ({ product }: ProductCardProps): JSX.Element => {
   return (
-    <div className="mb-4 p-4 text-center cursor-pointer">
+    <div className="mb-4 p-4 text-center cursor-pointer flex flex-col items-center">
       <img
         src={`${VITE_BASE_URL}/${product.img}`}
         className="w-40 h-40 border-2 border-teal-400 rounded-lg"
       />
-      <h5>{product.name}</h5>
-      <h5>{product.price} &#8381;</h5>
-      <h5>{product.seller.username}</h5>
+      <h5 className="text-2xl">{product.name}</h5>
+      <h5 className="text-xl">{product.price} &#8381;</h5>
+      <h5 className="text-wrap text-xl">{product.seller.username}</h5>
     </div>
   );
 };

@@ -24,8 +24,9 @@ from user.exceptions import (
     DefaultRoleException,
 )
 from user.models import CustomUser
-from product.models import Product
 
+import logging
+logger = logging.getLogger("cons")
 
 class Register(Schema):
     username: str
@@ -152,6 +153,7 @@ class MyTokenObtainPairInput(TokenObtainInputSchemaBase):
         values = {}
         refresh = RefreshToken.for_user(user)
         values["refresh"] = str(refresh)
+        logger.info(str(refresh))
         values["access"] = str(refresh.access_token) #type: ignore
         values.update(user=UserOut.from_orm(user))
         return values
@@ -164,6 +166,7 @@ class MyTokenRefresh(TokenRefreshInputSchema):
         return MyTokenObtainPairOut
 
     def output_schema(self) -> Type[Schema]:
+        logger.info(self.refresh)
         payload = jwt.decode(self.refresh, key=settings.SECRET_KEY, algorithms="HS256") #type: ignore
         user_obj = CustomUser.objects.get(pk=payload["user_id"])
         refresh = RefreshToken.for_user(user_obj)

@@ -13,6 +13,8 @@ def add_to_cart(user_id: int, cart: AddCartItem) -> CartItem:
     product = get_object_or_404(Product, id=cart.product_id)
     if product.count < cart.count:
         raise InsufficientProductError()
+    product.count -= cart.count
+    product.save()
 
     dict_data = {
         "product_id": cart.product_id,
@@ -20,11 +22,16 @@ def add_to_cart(user_id: int, cart: AddCartItem) -> CartItem:
         "count": cart.count,
         "delivery_date": cart.delivery_date
     }
-
-    data = list(dict_data.values())
-    template = ", ".join(["%s"] * len(data))
-    with connection.cursor() as cursor:
-        cursor.execute(f"CALL create_cart_item({template})", data)
+    in_cart = CartItem.objects.filter(product_id=dict_data["product_id"], user_id=dict_data["user_id"])
+    if not in_cart.exists():
+        data = list(dict_data.values())
+        template = ", ".join(["%s"] * len(data))
+        with connection.cursor() as cursor:
+            cursor.execute(f"CALL create_cart_item({template})", data)
+    else:
+        item: CartItem = in_cart.first() #type: ignore
+        item.count += cart.count
+        item.save()
     obj = CartItem.objects.get(product_id=dict_data["product_id"], user_id=dict_data["user_id"])
     return obj
 

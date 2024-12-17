@@ -1,17 +1,17 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from ninja import Schema
 from pydantic import PositiveInt
-
-from product.schemas import ProductOut
+from django.utils.timezone import now
+from product.schemas import ProductOutForCart
 
 
 class BaseCartItem(Schema):
     count: PositiveInt
-    delivery_date: datetime
+    delivery_date: datetime = now() + timedelta(7)
 
 
 class CartItem(BaseCartItem):
-    product: ProductOut
+    product: ProductOutForCart
 
 
 class AddCartItem(BaseCartItem):

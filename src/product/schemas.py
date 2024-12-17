@@ -38,13 +38,16 @@ class ProductOut(Product):
     seller: SellerOutForProduct
     img: str
     about: dict[str, Any] | None = None
-    categories: list[CategoryOut]
+    # categories: list[CategoryOut]
 
+class ProductOutForCart(Product):
+    id: int
+    img: str
+    seller: Profile
 
 class ProductOutForList(Product):
     id: int
     img: str
-    about: dict[str, Any] | None = None
     seller: SellerOutForProduct
 
 
@@ -65,4 +68,16 @@ def get_seller_out_for_product_schema(product: ProductModel) -> ProductOutForLis
         shelf_life=product.shelf_life,
         mass=product.mass,
         img=product.img,
+        seller=SellerOutForProduct(username=CustomUser.objects.get(pk=product.seller.pk).username))
+
+
+def get_seller_out_for_single_product_schema(product: ProductModel) -> ProductOut:
+    return ProductOut(id=product.pk,
+        name=product.name,
+        count=product.count,
+        price=product.price,
+        shelf_life=product.shelf_life,
+        mass=product.mass,
+        img=product.img,
+        about=product.about,
         seller=SellerOutForProduct(username=CustomUser.objects.get(pk=product.seller.pk).username))
