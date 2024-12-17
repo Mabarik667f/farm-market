@@ -1,8 +1,9 @@
-import { Button } from "@/UI";
+import { Products } from "@/modules/Main";
+
 function MainPage() {
   return (
     <div>
-      <Button text="test" />
+      <Products />
     </div>
   );
 }

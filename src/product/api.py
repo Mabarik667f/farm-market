@@ -7,12 +7,12 @@ from ninja_extra.permissions.common import IsAdminUser
 from ninja_jwt.authentication import JWTAuth
 
 from product.permissions import IsOwnerProduct, IsSeller
-from product.schemas import CreateProduct, PatchProduct, ProductOut
+from product.schemas import CreateProduct, PatchProduct, ProductOut, ProductOutForList, get_seller_out_for_product_schema
 from product import crud
 
 logger = logging.getLogger("cons")
 
-@api_controller(tags=["products"])
+@api_controller("/products", tags=["products"])
 class ProductAPI(ControllerBase):
     @route.post("/", response={201: ProductOut}, permissions=[IsSeller])
     def create_product(self, product: CreateProduct, file: File[UploadedFile]):
@@ -27,14 +27,15 @@ class ProductAPI(ControllerBase):
     def del_product(self, product_id: int):
         crud.del_product(product_id)
 
+    @route.get("/list/", response={200: list[ProductOutForList]}, auth=None)
+    @paginate
+    def list_products(self, category_ids: list[int] = []):
+        products = crud.list_products(category_ids)
+        return [get_seller_out_for_product_schema(p) for p in products]
+
     @route.get("/{product_id}", response={200: ProductOut}, auth=None)
     def get_product(self, product_id: int):
         return crud.get_product(product_id)
-
-    @route.get("/", response={200: list[ProductOut]}, auth=None)
-    @paginate
-    def list_products(self, category_ids: list[int] = []):
-        return crud.list_products(category_ids)
 
     @route.put("/{product_id}/{cat_id}", response={201: ProductOut})
     def add_category_for_product(self, product_id: int, cat_id: int):

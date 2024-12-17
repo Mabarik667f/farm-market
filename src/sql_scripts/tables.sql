@@ -48,6 +48,8 @@ CREATE TABLE product_product (
     name varchar(255) NOT NULL,
     price integer NOT NULL CHECK (price >= 0),
     count integer NOT NULL CHECK (count >= 0),
+    mass numeric NOT NULL,
+    shelf_life date NOT NULL,
     about jsonb NOT NULL,
     img varchar(100) NOT NULL,
     seller_id bigint NOT NULL,

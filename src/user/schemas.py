@@ -24,6 +24,7 @@ from user.exceptions import (
     DefaultRoleException,
 )
 from user.models import CustomUser
+from product.models import Product
 
 
 class Register(Schema):
@@ -124,6 +125,10 @@ class Profile(Schema):
 
 class ProfileOutWithUserId(Profile):
     user_id: int
+
+
+class SellerOutForProduct(User):
+    pass
 
 
 class ProfileOutWithUser(Profile):

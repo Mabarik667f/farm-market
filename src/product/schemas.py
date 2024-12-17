@@ -5,8 +5,10 @@ from ninja import Schema
 from ninja.schema import Field
 from pydantic import PositiveInt
 
-from user.schemas import Profile
-from category.schemas import Category
+from user.schemas import Profile, SellerOutForProduct
+from category.schemas import CategoryOut
+from user.models import CustomUser
+from product.models import Product as ProductModel
 
 logger = logging.getLogger("cons")
 
@@ -33,10 +35,17 @@ class PatchProduct(Schema):
 
 class ProductOut(Product):
     id: int
-    seller: Profile
+    seller: SellerOutForProduct
     img: str
     about: dict[str, Any] | None = None
-    categories: list[Category]
+    categories: list[CategoryOut]
+
+
+class ProductOutForList(Product):
+    id: int
+    img: str
+    about: dict[str, Any] | None = None
+    seller: SellerOutForProduct
 
 
 class ProductOutForOrder(Schema):
@@ -46,3 +55,14 @@ class ProductOutForOrder(Schema):
     mass: float
     seller: Profile
     img: str
+
+
+def get_seller_out_for_product_schema(product: ProductModel) -> ProductOutForList:
+    return ProductOutForList(id=product.pk,
+        name=product.name,
+        count=product.count,
+        price=product.price,
+        shelf_life=product.shelf_life,
+        mass=product.mass,
+        img=product.img,
+        seller=SellerOutForProduct(username=CustomUser.objects.get(pk=product.seller.pk).username))
