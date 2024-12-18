@@ -17,7 +17,6 @@ const ProductDescribe = (): JSX.Element => {
       setLoad(false);
       const newPr = await getProduct(Number(id));
       if (newPr) {
-        console.log(newPr);
         setProduct({ ...newPr });
       }
       setLoad(true);

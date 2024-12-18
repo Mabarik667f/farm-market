@@ -1,14 +1,8 @@
 import ISeller from "./ISeller";
 import ICategory from "./ICategory";
+import IBaseProduct from "./IBaseProduct";
 
-export default interface IProduct {
-  id: number;
-  name: string;
-  price: number;
-  count: number;
-  mass: number;
-  shelf_life: Date;
+export default interface IProduct extends IBaseProduct {
   seller: ISeller;
-  img: string;
   categories: Array<ICategory>;
 }
