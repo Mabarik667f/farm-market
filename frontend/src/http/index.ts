@@ -33,8 +33,8 @@ $api.interceptors.response.use(
         const response = await axios.post<AuthResponse>(
           `${API_URL}/token/refresh`,
           { refresh: Cookies.get("refresh") },
-          { withCredentials: true },
         );
+        Cookies.set("refresh", response.data.refresh);
         localStorage.setItem("access", response.data.access);
         return $api.request(originalRequest);
       } catch (e) {
