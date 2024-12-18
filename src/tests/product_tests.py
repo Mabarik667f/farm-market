@@ -85,7 +85,7 @@ class TestCasesforProducts(BaseTestClass):
         assert response.json()["name"]
 
     def tests_get_list_products(self, p_client: TestClient, new_product: ProductData):
-        response = p_client.get(f'/')
+        response = p_client.get(f'/list/')
         assert response.status_code == 200
         assert len(response.json()["items"]) == 1
 

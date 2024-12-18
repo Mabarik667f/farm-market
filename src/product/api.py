@@ -7,7 +7,7 @@ from ninja_extra.permissions.common import IsAdminUser
 from ninja_jwt.authentication import JWTAuth
 
 from product.permissions import IsOwnerProduct, IsSeller
-from product.schemas import CreateProduct, PatchProduct, ProductOut, ProductOutForList, get_seller_out_for_product_schema, get_seller_out_for_single_product_schema
+from product.schemas import CreateProduct, PatchProduct, ProductOut, ProductOutForList, get_seller_out_for_product_schema
 from product import crud
 
 logger = logging.getLogger("cons")
@@ -35,7 +35,7 @@ class ProductAPI(ControllerBase):
 
     @route.get("/{product_id}", response={200: ProductOut}, auth=None)
     def get_product(self, product_id: int):
-        return get_seller_out_for_single_product_schema(crud.get_product(product_id))
+        return crud.get_product(product_id)
 
     @route.put("/{product_id}/{cat_id}", response={201: ProductOut})
     def add_category_for_product(self, product_id: int, cat_id: int):

@@ -26,6 +26,8 @@ def create_order(profile_id: int, payload: CreateOrder) -> Order:
             obj = Order.objects.get(created=payload.created.replace(tzinfo=timezone.utc), user_id=profile_id)
 
             cart_items = CartItem.objects.filter(id__in=payload.cart_item_ids).select_related("product")
+            if not cart_items:
+                raise InsufficientProductError()
             for item in cart_items:
                 if item.count > item.product.count:
                     raise InsufficientProductError()
@@ -40,6 +42,8 @@ def create_order(profile_id: int, payload: CreateOrder) -> Order:
                 cursor.execute(f"CALL create_order_item({item_template})", data)
                 item.product.count -= item.count
                 item.product.save()
+                item.delete()
+
 
     return obj
 

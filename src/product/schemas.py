@@ -5,6 +5,7 @@ from ninja import Schema
 from ninja.schema import Field
 from pydantic import PositiveInt
 
+from category.models import CategoryHasProduct
 from user.schemas import Profile, SellerOutForProduct
 from category.schemas import CategoryOut
 from user.models import CustomUser
@@ -35,15 +36,16 @@ class PatchProduct(Schema):
 
 class ProductOut(Product):
     id: int
-    seller: SellerOutForProduct
+    seller: Profile
     img: str
     about: dict[str, Any] | None = None
-    # categories: list[CategoryOut]
+    categories: list[CategoryOut]
 
 class ProductOutForCart(Product):
     id: int
     img: str
     seller: Profile
+
 
 class ProductOutForList(Product):
     id: int
@@ -71,13 +73,16 @@ def get_seller_out_for_product_schema(product: ProductModel) -> ProductOutForLis
         seller=SellerOutForProduct(username=CustomUser.objects.get(pk=product.seller.pk).username))
 
 
-def get_seller_out_for_single_product_schema(product: ProductModel) -> ProductOut:
-    return ProductOut(id=product.pk,
-        name=product.name,
-        count=product.count,
-        price=product.price,
-        shelf_life=product.shelf_life,
-        mass=product.mass,
-        img=product.img,
-        about=product.about,
-        seller=SellerOutForProduct(username=CustomUser.objects.get(pk=product.seller.pk).username))
+# def get_seller_out_for_single_product_schema(product: ProductModel) -> ProductOut:
+#     category_ids = CategoryHasProduct.objects.filter(product_id=product.pk).select_related("category")
+#     categories = [CategoryOut(id=c.pk, name=c.category.name) for c in category_ids]
+#     return ProductOut(id=product.pk,
+#         name=product.name,
+#         count=product.count,
+#         price=product.price,
+#         shelf_life=product.shelf_life,
+#         mass=product.mass,
+#         img=product.img,
+#         about=product.about,
+#         categories=categories,
+#         seller=Profile.o)

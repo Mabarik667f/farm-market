@@ -13,8 +13,6 @@ def add_to_cart(user_id: int, cart: AddCartItem) -> CartItem:
     product = get_object_or_404(Product, id=cart.product_id)
     if product.count < cart.count:
         raise InsufficientProductError()
-    product.count -= cart.count
-    product.save()
 
     dict_data = {
         "product_id": cart.product_id,
