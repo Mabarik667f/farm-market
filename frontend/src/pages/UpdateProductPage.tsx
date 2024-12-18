@@ -1,5 +1,7 @@
+import { Update } from "@/modules/Product";
+
 const UpdateProductPage = (): JSX.Element => {
-  return <></>;
+  return <Update />;
 };
 
 export default UpdateProductPage;

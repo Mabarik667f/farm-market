@@ -1,5 +1,7 @@
+import { Create } from "@/modules/Product";
+
 const CreateProductPage = (): JSX.Element => {
-  return <></>;
+  return <Create />;
 };
 
 export default CreateProductPage;

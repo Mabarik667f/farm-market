@@ -1,5 +1,7 @@
+import { Delete } from "@/modules/Product";
+
 const DeleteProductPage = (): JSX.Element => {
-  return <></>;
+  return <Delete />;
 };
 
 export default DeleteProductPage;

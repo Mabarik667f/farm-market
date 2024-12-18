@@ -10,4 +10,8 @@ export default class ProductClass {
   static async addToCart(product: AddToCart): Promise<AxiosResponse> {
     return $api.post("/cart/", { ...product });
   }
+
+  static async createProduct(): Promise<AxiosResponse> {}
+  static async updateProduct(): Promise<AxiosResponse> {}
+  static async deleteProduct(): Promise<AxiosResponse> {}
 }
