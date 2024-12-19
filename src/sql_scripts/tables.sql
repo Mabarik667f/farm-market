@@ -51,7 +51,7 @@ CREATE TABLE product_product (
     mass numeric NOT NULL,
     shelf_life date NOT NULL,
     about jsonb NOT NULL,
-    img varchar(100) NOT NULL,
+    img varchar(200) NOT NULL,
     seller_id bigint NOT NULL,
     CONSTRAINT "product_product_seller_id_7f1925e5_fk_user_profile_user_id" FOREIGN KEY ("seller_id") REFERENCES "user_profile" ("user_id") DEFERRABLE INITIALLY DEFERRED
 );

@@ -4,7 +4,8 @@ import ProductClass from "../services/ProductService";
 function filterEmptyFields(data: IUpdateProduct): object {
   return Object.fromEntries(
     Object.entries(data).filter(
-      ([key, value]) => value != null && value !== "" && key !== "img",
+      ([key, value]) =>
+        value != null && value !== "" && key !== "img" && key !== "about",
     ),
   );
 }

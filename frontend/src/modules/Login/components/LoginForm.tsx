@@ -16,7 +16,6 @@ function LoginForm() {
     if (store.isAuth) {
       navigate("/");
     } else {
-      setLogin("");
       setPassword("");
       setError("Неправильный логин или пароль");
     }

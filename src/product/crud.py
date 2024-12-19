@@ -90,6 +90,8 @@ def patch_product(
     obj = get_product(product_id)
     if payload.get("about"):
         obj.about = obj.about | payload.pop("about")
+    if obj.about is None:
+        obj.about = {}
     if payload.get("shelf_life"):
         payload["shelf_life"] = datetime.strftime(
             payload.get("shelf_life", datetime.now()), "%Y-%m-%d"
@@ -102,5 +104,7 @@ def patch_product(
 
 def update_img_product(product_id: int, file: UploadedFile) -> Product:
     obj = get_product(product_id)
+    if obj.about is None:
+        obj.about = {}
     UploadMediaFile(file).write_product_img(obj)
     return obj
