@@ -21,7 +21,7 @@ def create_product(user_id: int, product: CreateProduct, file: File[UploadedFile
         "mass": product.mass,
         "shelf_life": product.shelf_life,
         "about": json.dumps(product.about),
-        "img": "/",
+        "img": file.name,
         "seller_id": user_id
     }
     data = list(data.values())

@@ -113,11 +113,13 @@ CALL create_user (
 -- Добавление ролей
 CALL add_role_for_user (1, 1);
 
-CALL add_role_for_user (2, 2);
+CALL add_role_for_user (1, 2);
 
-CALL add_role_for_user (3, 2);
+CALL add_role_for_user (2, 1);
 
-CALL add_role_for_user (4, 2);
+CALL add_role_for_user (3, 1);
+
+CALL add_role_for_user (4, 1);
 
 CALL create_category ('Овощи');
 

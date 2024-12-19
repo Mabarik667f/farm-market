@@ -14,7 +14,7 @@ logger = logging.getLogger("cons")
 
 @api_controller("/products", tags=["products"])
 class ProductAPI(ControllerBase):
-    @route.post("/", response={201: ProductOut}, permissions=[IsSeller])
+    @route.post("/", response={201: ProductOut}, permissions=[IsSeller], auth=JWTAuth())
     def create_product(self, product: CreateProduct, file: File[UploadedFile]):
         request: HttpRequest = self.context.request #type: ignore
         return crud.create_product(request.user.pk, product, file)

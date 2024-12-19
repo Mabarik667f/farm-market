@@ -30,7 +30,6 @@ class UploadMediaFile:
         setattr(product, "img", file_path)
 
     def write_file(self, product: Product, upload_path: Path) -> str:
-        upload_path.mkdir(exist_ok=True)
         if not self.file.name:
             self.file.name = self.get_default_file_name()
         file_path = f"{str(upload_path)}/{self.file.name}"
