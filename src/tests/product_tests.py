@@ -96,10 +96,11 @@ class TestCasesforProducts(BaseTestClass):
         new_product: ProductData,
         new_user: CustomUser
     ):
-        self.set_headers(new_product.user)
+        self.set_headers(new_user)
         response = p_client.delete(f'/{new_product.product.pk}', headers=self.headers, user=new_user)
         assert response.status_code == 403
 
+        self.set_headers(new_product.user)
         response = p_client.delete(f'/{new_product.product.pk}', headers=self.headers, user=new_product.user)
         assert response.status_code == 204
 

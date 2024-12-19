@@ -11,10 +11,7 @@ function filterEmptyFields(data: IUpdateProduct): object {
 
 export default async function update(product: IUpdateProduct, id: number) {
   try {
-    console.log(2);
     const pr = filterEmptyFields(product);
-    console.log(1);
-    console.log(pr);
     if (Object.keys(pr).length >= 1) {
       console.log("length");
       await ProductClass.updateProduct(pr, id);

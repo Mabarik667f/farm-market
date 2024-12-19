@@ -12,7 +12,10 @@ from product.schemas import (
     PatchProduct,
     ProductOut,
     ProductOutForList,
+    SingleProductOut,
+    get_seller_out_for_single_product_schema,
     get_seller_out_for_product_schema,
+
 )
 from product import crud
 
@@ -41,9 +44,10 @@ class ProductAPI(ControllerBase):
         products = crud.list_products(category_ids)
         return [get_seller_out_for_product_schema(p) for p in products]
 
-    @route.get("/{product_id}", response={200: ProductOut}, auth=None)
+    @route.get("/{product_id}", response={200: SingleProductOut}, auth=None)
     def get_product(self, product_id: int):
-        return crud.get_product(product_id)
+        product = crud.get_product(product_id)
+        return get_seller_out_for_single_product_schema(product)
 
     @route.put("/{product_id}/{cat_id}", response={201: ProductOut}, auth=JWTAuth())
     def add_category_for_product(self, product_id: int, cat_id: int):

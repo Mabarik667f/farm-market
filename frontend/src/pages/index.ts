@@ -6,5 +6,4 @@ export { default as OrdersPage } from "./OrdersPage";
 export { default as CartPage } from "./CartPage";
 export { default as ProductPage } from "./ProductPage";
 export { default as CreateProductPage } from "./CreateProductPage";
-export { default as DeleteProductPage } from "./DeleteProductPage";
 export { default as UpdateProductPage } from "./UpdateProductPage";

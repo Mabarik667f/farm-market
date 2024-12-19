@@ -9,6 +9,7 @@ import Categories from "./Categories";
 const Create = (): JSX.Element => {
   const [product, setProduct] = useState<ICreateProduct>({
     name: "",
+    about: {},
     count: "",
     price: "",
     mass: "",

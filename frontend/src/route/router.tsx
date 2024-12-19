@@ -8,7 +8,6 @@ import {
   CartPage,
   ProductPage,
   CreateProductPage,
-  DeleteProductPage,
   UpdateProductPage,
 } from "@/pages";
 import App from "@/App";
@@ -65,14 +64,6 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <UpdateProductPage />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "delete-product/:id",
-        element: (
-          <ProtectedRoute>
-            <DeleteProductPage />
           </ProtectedRoute>
         ),
       },

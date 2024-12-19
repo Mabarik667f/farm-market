@@ -43,6 +43,14 @@ class ProductOut(Product):
     about: dict[str, Any] | None = None
     categories: list[CategoryOut]
 
+class SingleProductOut(Product):
+    id: int
+    seller: SellerOutForProduct
+    img: str
+    about: dict[str, Any] | None = None
+    categories: list[CategoryOut]
+
+
 
 class ProductOutForCart(Product):
     id: int
@@ -80,16 +88,17 @@ def get_seller_out_for_product_schema(product: ProductModel) -> ProductOutForLis
     )
 
 
-# def get_seller_out_for_single_product_schema(product: ProductModel) -> ProductOut:
-#     category_ids = CategoryHasProduct.objects.filter(product_id=product.pk).select_related("category")
-#     categories = [CategoryOut(id=c.pk, name=c.category.name) for c in category_ids]
-#     return ProductOut(id=product.pk,
-#         name=product.name,
-#         count=product.count,
-#         price=product.price,
-#         shelf_life=product.shelf_life,
-#         mass=product.mass,
-#         img=product.img,
-#         about=product.about,
-#         categories=categories,
-#         seller=Profile.o)
+def get_seller_out_for_single_product_schema(product: ProductModel) -> SingleProductOut:
+    category_ids = CategoryHasProduct.objects.filter(product_id=product.pk).select_related("category")
+    categories = [CategoryOut(id=c.pk, name=c.category.name) for c in category_ids]
+    return SingleProductOut(id=product.pk,
+        name=product.name,
+        count=product.count,
+        price=product.price,
+        shelf_life=product.shelf_life,
+        mass=product.mass,
+        img=product.img,
+        about=product.about,
+        categories=categories,
+        seller=SellerOutForProduct(username=CustomUser.objects.get(pk=product.seller.pk).username)
+    )

@@ -1,13 +1,16 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import getProduct from "../api/getProduct";
 import { Button } from "@/UI";
 import IProductWithAbout from "../interfaces/IProductWithAbout";
 import addToCart from "../api/addToCart";
 import AddToCart from "../interfaces/AddToCart";
+import Delete from "./Delete";
+import { AuthContext } from "@/contexts/AuthContext";
 
 const ProductDescribe = (): JSX.Element => {
   const { id } = useParams();
+  const { store } = useContext(AuthContext);
   const [product, setProduct] = useState<IProductWithAbout>(
     {} as IProductWithAbout,
   );
@@ -18,6 +21,7 @@ const ProductDescribe = (): JSX.Element => {
       const newPr = await getProduct(Number(id));
       if (newPr) {
         setProduct({ ...newPr });
+        console.log(newPr);
       }
       setLoad(true);
     };
@@ -46,11 +50,17 @@ const ProductDescribe = (): JSX.Element => {
     setProduct({ ...product, count: product.count - buy.count });
   };
 
+  const navigate = useNavigate();
+  const handleUpdate = () => {
+    navigate(`/update-product/${id}`);
+  };
+
   if (load) {
     return (
       <div className="flex flex-col justify-center items-center mt-4">
         <img
           src={`${VITE_BASE_URL}/${product?.img}`}
+          defaultValue={""}
           className="w-96 border-2 border-teal-400 rounded-lg"
         />
         <h1 className="text-3xl mt-2">{product.name}</h1>
@@ -79,19 +89,20 @@ const ProductDescribe = (): JSX.Element => {
             <label className="mr-2">Масса: </label>
             <div>{product.mass} г.</div>
           </div>
-          {Object.entries(product.about).map(([key, value], index) => (
-            <div className="flex justify-between items-center" key={index}>
-              <label className="mr-2">
-                {key
-                  .toLowerCase()
-                  .split(" ")
-                  .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-                  .join(" ")}
-                :
-              </label>
-              <div>{value}</div>
-            </div>
-          ))}
+          {product.about &&
+            Object.entries(product?.about).map(([key, value], index) => (
+              <div className="flex justify-between items-center" key={index}>
+                <label className="mr-2">
+                  {key
+                    .toLowerCase()
+                    .split(" ")
+                    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                    .join(" ")}
+                  :
+                </label>
+                <div>{value}</div>
+              </div>
+            ))}
         </div>
         <div className="flex justify-center items-center m-4">
           <Button onClick={decrement} className="bg-red-500">
@@ -105,6 +116,14 @@ const ProductDescribe = (): JSX.Element => {
         <Button className="bg-teal-400" onClick={addProduct}>
           В корзину
         </Button>
+        {store.user.username === product.seller.username && (
+          <div className="flex flex-col">
+            <Button className="bg-yellow-400 mt-2" onClick={handleUpdate}>
+              Обновить
+            </Button>
+            <Delete id={id} />
+          </div>
+        )}
       </div>
     );
   } else {

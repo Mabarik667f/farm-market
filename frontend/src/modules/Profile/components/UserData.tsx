@@ -1,13 +1,17 @@
 import { AuthContext } from "@/contexts/AuthContext";
 import { RoleName } from "@/interfaces/IUser";
+import { Button } from "@/UI";
 import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 const UserData = () => {
   const { store } = useContext(AuthContext);
+  const navigate = useNavigate();
   const roles: Record<RoleName, { id: number; text: string }> = {
     D: { id: 1, text: "Пользователь" },
     A: { id: 2, text: "Админ" },
     S: { id: 3, text: "Продавец" },
   };
+  console.log(store.user.roles);
 
   if (!store.user.roles) {
     return <div>Загрузка...</div>;
@@ -36,6 +40,15 @@ const UserData = () => {
           )}
         </div>
       </div>
+      {store.user.roles.some((role) => role.name === "S") && (
+        <Button
+          className="bg-teal-400 mt-2"
+          type="button"
+          onClick={() => navigate("/create-product")}
+        >
+          Создать продукт
+        </Button>
+      )}
     </div>
   );
 };
