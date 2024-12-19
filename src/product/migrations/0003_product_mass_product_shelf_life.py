@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('product', '0002_initial'),
+        ("product", "0002_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='product',
-            name='mass',
+            model_name="product",
+            name="mass",
             field=models.FloatField(default=0.0),
         ),
         migrations.AddField(
-            model_name='product',
-            name='shelf_life',
+            model_name="product",
+            name="shelf_life",
             field=models.DateField(auto_now=True),
         ),
     ]

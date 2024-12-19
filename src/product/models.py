@@ -7,7 +7,7 @@ class Product(models.Model):
     price = models.PositiveIntegerField()
     count = models.PositiveIntegerField()
     mass = models.FloatField(default=0.0)
-    shelf_life = models.DateField(auto_now=True)
+    shelf_life = models.DateField()
     about = models.JSONField()
     img = models.ImageField(upload_to="product/")
 
@@ -16,7 +16,7 @@ class Product(models.Model):
         to="user.CustomUser",
         through="cart.CartItem",
         related_name="products",
-        related_query_name="product"
+        related_query_name="product",
     )
 
     objects = models.Manager()

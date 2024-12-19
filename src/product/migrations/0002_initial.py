@@ -10,21 +10,28 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('cart', '0003_initial'),
-        ('product', '0001_initial'),
-        ('user', '0001_initial'),
+        ("cart", "0003_initial"),
+        ("product", "0001_initial"),
+        ("user", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='product',
-            name='cart_items',
-            field=models.ManyToManyField(related_name='products', related_query_name='product', through='cart.CartItem', to=settings.AUTH_USER_MODEL),
+            model_name="product",
+            name="cart_items",
+            field=models.ManyToManyField(
+                related_name="products",
+                related_query_name="product",
+                through="cart.CartItem",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AddField(
-            model_name='product',
-            name='seller',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='user.profile'),
+            model_name="product",
+            name="seller",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="user.profile"
+            ),
         ),
     ]

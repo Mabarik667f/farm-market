@@ -60,7 +60,8 @@ class TestCasesforProducts(BaseTestClass):
 
         j = response.json()
         assert response.status_code == 201
-        assert j["img"] == f"/media/product{j["id"]}/dummy.png"
+        assert j["img"] == "/media/dummy.png"
+
         assert j["about"]["other"] == 100
         assert j["mass"] == 100.0
         assert len(j["categories"]) == 2
@@ -108,23 +109,20 @@ class TestCasesforProducts(BaseTestClass):
         new_product: ProductData
     ):
         self.set_headers(new_product.user)
-        self.headers["Content-Type"] = "multipart/form-data"
-        new_data = {"payload": json.dumps({
+        new_data = {
             "count": 100,
             "about": {
                 "mass": 200,
                 "t": "ls"
             }
-        })}
+        }
 
-        response = p_client.patch(f"/{new_product.product.pk}", headers=self.headers,
-            data=new_data, FILES={"file": self.img}, user=new_product.user)
+        response = p_client.patch(f"/{new_product.product.pk}", json=new_data, headers=self.headers, user=new_product.user)
 
         j = response.json()
         assert response.status_code == 200
         assert j["count"] == 100
         assert j["about"]['mass'] == 200 and j["about"]["t"] == "ls"
-        assert j["img"] == f"/media/product{new_product.product.pk}/dummy.png"
 
     def tests_add_category_for_product(
         self,

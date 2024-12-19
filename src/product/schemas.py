@@ -13,6 +13,7 @@ from product.models import Product as ProductModel
 
 logger = logging.getLogger("cons")
 
+
 class Product(Schema):
     name: str = Field(max_length=255)
     price: PositiveInt
@@ -34,12 +35,14 @@ class PatchProduct(Schema):
     mass: float | None = None
     shelf_life: date | None = None
 
+
 class ProductOut(Product):
     id: int
     seller: Profile
     img: str
     about: dict[str, Any] | None = None
     categories: list[CategoryOut]
+
 
 class ProductOutForCart(Product):
     id: int
@@ -63,14 +66,18 @@ class ProductOutForOrder(Schema):
 
 
 def get_seller_out_for_product_schema(product: ProductModel) -> ProductOutForList:
-    return ProductOutForList(id=product.pk,
+    return ProductOutForList(
+        id=product.pk,
         name=product.name,
         count=product.count,
         price=product.price,
         shelf_life=product.shelf_life,
         mass=product.mass,
         img=product.img,
-        seller=SellerOutForProduct(username=CustomUser.objects.get(pk=product.seller.pk).username))
+        seller=SellerOutForProduct(
+            username=CustomUser.objects.get(pk=product.seller.pk).username
+        ),
+    )
 
 
 # def get_seller_out_for_single_product_schema(product: ProductModel) -> ProductOut:

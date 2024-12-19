@@ -26,8 +26,9 @@ class UploadMediaFile:
         upload_path = Path(product.get_upload_path())
         if upload_path.is_dir():
             self.clean_dir(upload_path)
-        file_path = self.write_file(product, upload_path)
-        setattr(product, "img", file_path)
+        self.write_file(product, upload_path)
+        setattr(product, "img", self.file.name)
+        product.save()
 
     def write_file(self, product: Product, upload_path: Path) -> str:
         if not self.file.name:
