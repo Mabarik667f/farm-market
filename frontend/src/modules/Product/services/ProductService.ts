@@ -1,8 +1,7 @@
 import $api from "@/http";
 import { AxiosResponse } from "axios";
 import AddToCart from "../interfaces/AddToCart";
-import ICreateProduct from "../interfaces/ICreateProduct";
-import IBaseProduct from "@/modules/Main/interfaces/IBaseProduct";
+import IUpdateProduct from "../interfaces/IUpdateProduct";
 
 export default class ProductClass {
   static async getProduct(id: number): Promise<AxiosResponse> {
@@ -20,7 +19,19 @@ export default class ProductClass {
     return $api.post("/products/", formData);
   }
 
-  static async updateProduct(product: IBaseProduct): Promise<AxiosResponse> {}
+  static async updateProduct(
+    product: IUpdateProduct,
+    id: number,
+  ): Promise<AxiosResponse> {
+    return $api.patch(`/products/${id}`, JSON.stringify({ ...product }));
+  }
+
+  static updateProductImg(file, id: number): Promise<AxiosResponse> {
+    $api.defaults.headers["Content-Type"] = "multipart/form-data";
+    const formData = new FormData();
+    formData.append("file", file);
+    return $api.post(`/products/${id}/img/`, formData);
+  }
 
   static async deleteProduct(product_id: number): Promise<AxiosResponse> {
     return $api.delete(`/products/${product_id}`);
