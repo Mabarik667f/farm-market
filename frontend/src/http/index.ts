@@ -23,13 +23,10 @@ $api.interceptors.response.use(
   },
   async (error) => {
     const originalRequest = error.config;
-    if (
-      error.response.status === 401 &&
-      error.config &&
-      error.config._isRetry
-    ) {
+    if (error.response.status === 401 && originalRequest) {
       originalRequest._isRetry = true;
       try {
+        console.log(1);
         const response = await axios.post<AuthResponse>(
           `${API_URL}/token/refresh`,
           { refresh: Cookies.get("refresh") },
