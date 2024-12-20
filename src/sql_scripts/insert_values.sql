@@ -7,18 +7,18 @@ CALL create_role ('A');
 
 CALL create_role ('D');
 
+--Wholesaller
 CALL create_role ('W');
 
---Wholesaller
+--Processor
 CALL create_role ('P');
 
---Processor
+--Logistician
 CALL create_role ('L');
 
---Logistician
+--Agent
 CALL create_role ('Ag');
 
---Agent
 CALL create_user (
     'admin',
     'admin@example.com',

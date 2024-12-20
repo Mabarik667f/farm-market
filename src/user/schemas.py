@@ -77,6 +77,10 @@ class RoleEnum(str, Enum):
     default = "D"
     admin = "A"
     seller = "S"
+    wholesaller = "W"
+    processor = "P"
+    logistician = "L"
+    agent = "Ag"
 
 
 class Role(Schema):

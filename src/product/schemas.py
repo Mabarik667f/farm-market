@@ -90,7 +90,7 @@ def get_seller_out_for_product_schema(product: ProductModel) -> ProductOutForLis
 
 def get_seller_out_for_single_product_schema(product: ProductModel) -> SingleProductOut:
     category_ids = CategoryHasProduct.objects.filter(product_id=product.pk).select_related("category")
-    categories = [CategoryOut(id=c.pk, name=c.category.name) for c in category_ids]
+    categories = [CategoryOut(id=c.category.pk, name=c.category.name) for c in category_ids]
     return SingleProductOut(id=product.pk,
         name=product.name,
         count=product.count,
