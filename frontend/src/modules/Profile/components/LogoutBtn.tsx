@@ -11,7 +11,7 @@ const LogoutBtn = (): JSX.Element => {
     navigate("/login");
   };
   return (
-    <Button className="bg-red-600 mt-4" onClick={logoutEvent}>
+    <Button className="text-black !p-0 m-4" onClick={logoutEvent}>
       Выйти
     </Button>
   );

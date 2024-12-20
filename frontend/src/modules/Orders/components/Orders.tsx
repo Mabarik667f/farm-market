@@ -9,7 +9,6 @@ const Orders = (): JSX.Element => {
     const getHistory = async () => {
       const newHistory = await history();
       if (newHistory) {
-        console.log(newHistory);
         setOrders(newHistory);
       }
     };

@@ -52,8 +52,17 @@ function LoginForm() {
           />
         </FormInpField>
       </div>
-      <div className="mt-2">
-        <Button className="border-teal-400 bg-teal-400">Войти</Button>
+      <div className="mt-2 flex flex-col justify-center items-center">
+        <Button className="border-teal-400 bg-teal-400" type="submit">
+          Войти
+        </Button>
+        <Button
+          className="bg-gray-400 mt-2"
+          type="button"
+          onClick={() => navigate("/register")}
+        >
+          Зарегистрироваться
+        </Button>
       </div>
     </form>
   );

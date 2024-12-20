@@ -11,7 +11,6 @@ const UserData = () => {
     A: { id: 2, text: "Админ" },
     S: { id: 3, text: "Продавец" },
   };
-  console.log(store.user.roles);
 
   if (!store.user.roles) {
     return <div>Загрузка...</div>;

@@ -92,9 +92,16 @@ const RegisterForm = (): JSX.Element => {
           </FormInpField>
         ))}
       </div>
-      <div className="mt-2">
+      <div className="mt-2 flex flex-col items-center justify-center">
         <Button className="border-teal-400 bg-teal-400" type="submit">
           Зарегистрироваться
+        </Button>
+        <Button
+          className="bg-gray-400 mt-2"
+          type="button"
+          onClick={() => navigate("/login")}
+        >
+          Войти
         </Button>
       </div>
     </form>

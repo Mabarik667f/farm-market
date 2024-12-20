@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import getProduct from "../api/getProduct";
 import { Button } from "@/UI";
 import IProductWithAbout from "../interfaces/IProductWithAbout";
+import ICategory from "@/modules/Main/interfaces/ICategory";
 import addToCart from "../api/addToCart";
 import AddToCart from "../interfaces/AddToCart";
 import Delete from "./Delete";
@@ -21,7 +22,6 @@ const ProductDescribe = (): JSX.Element => {
       const newPr = await getProduct(Number(id));
       if (newPr) {
         setProduct({ ...newPr });
-        console.log(newPr);
       }
       setLoad(true);
     };
@@ -40,12 +40,15 @@ const ProductDescribe = (): JSX.Element => {
   };
 
   const decrement = () => {
-    if (buy.count >= 1) {
+    if (buy.count > 1) {
       setBuy({ ...buy, count: buy.count - 1 });
     }
   };
 
   const addProduct = async () => {
+    if (!product.count) {
+      setProduct({ ...product, count: 1 });
+    }
     await addToCart(buy);
     setProduct({ ...product, count: product.count - buy.count });
   };
@@ -66,33 +69,33 @@ const ProductDescribe = (): JSX.Element => {
         <h1 className="text-3xl mt-2">{product.name}</h1>
         <div className="flex flex-col items-center justify-between">
           <div className="flex justify-between items-center">
-            <label className="mr-2">Цена:</label>
+            <label className="mr-2 font-bold">Цена:</label>
             <div>{product.price} &#8381;</div>
           </div>
 
           <div className="flex justify-between items-center">
-            <label className="mr-2">В наличии:</label>
+            <label className="mr-2 font-bold">В наличии:</label>
             <div>{product.count}</div>
           </div>
 
           <div className="flex justify-between items-center">
-            <label className="mr-2">Продавец:</label>
+            <label className="mr-2 font-bold">Продавец:</label>
             <div>{product.seller?.username}</div>
           </div>
 
           <div className="flex justify-between items-center">
-            <label className="mr-2">Продукт годен до:</label>
+            <label className="mr-2 font-bold">Продукт годен до:</label>
             <div>{product?.shelf_life?.toString()}</div>
           </div>
 
           <div className="flex justify-between items-center">
-            <label className="mr-2">Масса: </label>
+            <label className="mr-2 font-bold">Масса: </label>
             <div>{product.mass} г.</div>
           </div>
           {product.about &&
             Object.entries(product?.about).map(([key, value], index) => (
               <div className="flex justify-between items-center" key={index}>
-                <label className="mr-2">
+                <label className="mr-2 font-bold">
                   {key
                     .toLowerCase()
                     .split(" ")
@@ -103,6 +106,19 @@ const ProductDescribe = (): JSX.Element => {
                 <div>{value}</div>
               </div>
             ))}
+
+          <div className="flex flex-col justify-between items-center">
+            <label className="mr-2 font-bold">Категории:</label>
+            {product.categories &&
+              product?.categories.map(({ name, id }: ICategory) => (
+                <div
+                  className="flex flex-col justify-between items-center"
+                  key={id}
+                >
+                  <div>{name}</div>
+                </div>
+              ))}
+          </div>
         </div>
         <div className="flex justify-center items-center m-4">
           <Button onClick={decrement} className="bg-red-500">
