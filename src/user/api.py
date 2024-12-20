@@ -29,7 +29,7 @@ class UserAPI(ControllerBase):
 
     @route.get("/roles/all", response={200: list[RoleOut]}, auth=None)
     def get_roles(self):
-        return crud.get_roles()
+        return [RoleOut.role_out_schema(r) for r in crud.get_roles()]
 
     @route.get("/{user_id}", response={200: UserOut}, permissions=[])
     def get_user(self, user_id: int):

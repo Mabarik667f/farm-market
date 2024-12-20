@@ -1,6 +1,6 @@
 import re
 import jwt
-from typing import Type
+from typing import Type, Self
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.conf import settings
@@ -23,7 +23,7 @@ from user.exceptions import (
     UsernameUniqueException,
     DefaultRoleException,
 )
-from user.models import CustomUser
+from user.models import CustomUser, Role as RoleModel
 
 import logging
 logger = logging.getLogger("cons")
@@ -82,6 +82,19 @@ class RoleEnum(str, Enum):
     logistician = "L"
     agent = "Ag"
 
+    @classmethod
+    def description(cls, value: str) -> str:
+        descriptions = {
+            "D": "Пользователь",
+            "A": "Админ",
+            "S": "Продавец",
+            "W": "Оптовик",
+            "P": "Обработчик",
+            "L": "Логист",
+            "Ag": "Агент"
+        }
+        return descriptions.get(value, "Unknown")
+
 
 class Role(Schema):
     name: RoleEnum
@@ -94,10 +107,17 @@ class AddRole(Role):
             raise DefaultRoleException()
         return v
 
-
 class RoleOut(Role):
     id: int
+    description: str
 
+    @staticmethod
+    def role_out_schema(role: RoleModel) -> Self:
+        return RoleOut(
+            id=role.pk,
+            name=role.name,
+            description=RoleEnum.description(role.name)
+        )
 
 class User(Schema):
     username: str
