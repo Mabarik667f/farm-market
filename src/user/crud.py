@@ -1,4 +1,5 @@
 from django.db import connection
+from django.db.models import QuerySet
 from django.utils import timezone
 from django.contrib.auth.hashers import make_password
 from django.shortcuts import get_object_or_404
@@ -45,3 +46,7 @@ def del_role(user_id: int, role: AddRole):
     role_obj = get_object_or_404(RoleModel, name=role.name)
     obj = get_object_or_404(RoleForUser, user_id=user_id, role_id=role_obj.pk)
     obj.delete()
+
+
+def get_roles() -> QuerySet[RoleModel]:
+    return RoleModel.objects.all()

@@ -5,6 +5,7 @@ from ninja_jwt.authentication import JWTAuth
 from user import crud
 from user.schemas import (
     AddRole,
+    RoleOut,
     MyTokenRefresh,
     MyTokenVerify,
     Register,
@@ -25,6 +26,10 @@ class UserAPI(ControllerBase):
     @route.post("/register", response={201: UserOutWithEmail}, auth=None)
     def register(self, payload: Register):
         return crud.create_user(payload)
+
+    @route.get("/roles/all", response={200: list[RoleOut]}, auth=None)
+    def get_roles(self):
+        return crud.get_roles()
 
     @route.get("/{user_id}", response={200: UserOut}, permissions=[])
     def get_user(self, user_id: int):
