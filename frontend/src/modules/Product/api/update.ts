@@ -1,5 +1,6 @@
 import IUpdateProduct from "../interfaces/IUpdateProduct";
 import ProductClass from "../services/ProductService";
+import $api from "@/http";
 
 function filterEmptyFields(data: IUpdateProduct): object {
   return Object.fromEntries(
@@ -14,7 +15,6 @@ export default async function update(product: IUpdateProduct, id: number) {
   try {
     const pr = filterEmptyFields(product);
     if (Object.keys(pr).length >= 1) {
-      console.log("length");
       await ProductClass.updateProduct(pr, id);
     }
     if (product.img !== null) {
@@ -23,5 +23,7 @@ export default async function update(product: IUpdateProduct, id: number) {
   } catch (e) {
     console.log(e);
     throw new Error();
+  } finally {
+    $api.defaults.headers["Content-Type"] = "application/json";
   }
 }

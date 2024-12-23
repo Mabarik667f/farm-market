@@ -38,7 +38,6 @@ class OrderOutForHistory(Order):
 
 class History(Schema):
     order: OrderOutForHistory
-    profile_id: int = Field(gt=0)
 
 
 def get_order_out_schema(order: OrderModel) -> OrderOut:
