@@ -1,5 +1,4 @@
 import LogoutBtn from "@/modules/Profile/components/LogoutBtn";
-import { Button } from "@/UI";
 import Cookies from "js-cookie";
 import { observer } from "mobx-react-lite";
 import { NavLink } from "react-router-dom";
